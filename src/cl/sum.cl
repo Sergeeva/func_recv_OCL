@@ -1,4 +1,4 @@
-#define WORK_GROUP_SIZE 256
+#define WORK_GROUP_SIZE 128
 
 //#pragma OPENCL EXTENSION cl_khr_int64_base_atomics : enable
 
