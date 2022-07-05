@@ -1,0 +1,120 @@
+% -*- mode: LaTeX; mode: TeX-PDF; coding: cp1251 --*
+
+\documentclass[a4paper, 14pt,
+  candidate,
+  subf,
+  %href,
+  colorlinks=false,
+  fixint=false,
+  %times,
+  %draft
+]{disser}
+
+
+%\usepackage{pscyr} --- чтоб был TimesNewRoman его надо поставить и подключить
+
+\usepackage{geometry} %способ ручной установки полей
+\geometry{top=2cm} %поле сверху
+\geometry{bottom=2.5cm} %поле снизу
+\geometry{left=2.5cm} %поле справа
+\geometry{right=2cm} %поле слева
+
+%чтобы использовать полуторный интервал
+\renewcommand{\baselinestretch}{1.5}
+
+\usepackage[T2A]{fontenc}
+\usepackage[cp1251]{inputenc}
+\usepackage[english,russian]{babel}
+
+% Использовать полужирное начертание для векторов
+\let\vec=\mathbf
+
+% Включать подсекции в оглавление
+\setcounter{tocdepth}{2}
+
+\usepackage[centertags]{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+
+\usepackage{listings}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{mathtext} % еcли нyжны pyccкие бyквы в фоpмyлах
+
+\usepackage{placeins} % не дает плавающим иллюстрациям утекать за барьер
+
+\usepackage{lscape}
+
+\usepackage{verbatim}
+
+%\usepackage{pdfpages}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifx\pdfoutput\undefined
+\usepackage[dvips]{graphicx}
+\else
+\usepackage[pdftex]{graphicx}
+\fi
+\graphicspath{{images/}}
+
+
+\makeatletter
+\renewcommand{\@biblabel}[1]{#1.\hfill}
+\makeatother
+
+\begin{document}
+
+%\noindent\textbf{ПАРАЛЛЕЛЬНАЯ  
+%ОБРАБОТКА ГИДРОАКУСТИЧЕСКОЙ ИНФОРМАЦИИ 
+%ЛИНЕЙНЫХ АНТЕННЫХ РЕШЁТОК В РЕАЛЬНОМ ВРЕМЕНИ}
+%
+%\bigskip
+%
+\noindent А.~Р.~Лисс, д.т.н., Г.~Ю.~Пуеров, к.ф.-м.н.,  Е.~И.~Сергеева
+%
+%\noindent АО <<Концерн <<Океанприбор>>, Санкт-Петербург, Россия.
+%
+%\NOINDENT G.~Yu.~Puerov, Ph.D., E.~I.~Sergeeva.
+%\noindent JSC <<Concern <<Oceanpribor>>, St.-Petersburg, Russia.
+%
+\bigskip
+
+
+\input{func_recv_annotate}
+\bigskip
+
+\subsection*{Введение}
+
+\input{func_recv_intro__cp1251}
+
+\input{bspp_review}
+
+\input{func_recv_4__cp1251}
+
+\subsection*{Заключение}
+%\section*{Выводы}
+
+В статье предложена схема вычислений для алгоритмов восстановления данных
+без сглаживания и со сглаживанием, которая позволяет сократить
+количество арифметических операций, требуемых для их выполнения.
+На базе этой схемы построены эффективные параллельные алгоритмы
+для класса вычислительных систем, описываемых моделью БСКП.
+Произведена теоретическая оценка вычислительной и коммуникационной сложности
+предложенных алгоритмов,
+выведены зависимости между размерностями задачи и параметрами модели БСКП.
+
+Рассмотренные алгоритмы применяются для
+повышения частоты дискретизации сигналов
+при программной имитации гидроакустической информации
+линейных антенных решёток.
+
+\bibliographystyle{gost705}
+\bibliography{bibl__cp1251}{}
+
+
+
+%\newpage
+%\appendix
+
+
+\end{document}
