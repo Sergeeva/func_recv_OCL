@@ -3,26 +3,27 @@
 //#pragma OPENCL EXTENSION cl_khr_int64_base_atomics : enable
 
 
-__kernel void sum(__global const int* input, int n,
-                  volatile __global int* res){
+__kernel void prod(    __global const float* in_data, 
+                        int K, // кол-во узлов крупной сетки
+                        __global const float* kern_vals,
+                        int Nr, //размер 
+                        volatile __global float* prod_vals){
 
     int localID = get_local_id(0);
     int globalID = get_global_id(0);
 
-    __local int input_local[WORK_GROUP_SIZE];
-    input_local[localID] = input[globalID];
+    //__local int input_local[WORK_GROUP_SIZE];
+    //input_local[localID] = input[globalID];
 
-    barrier(CLK_LOCAL_MEM_FENCE);
+    //barrier(CLK_LOCAL_MEM_FENCE); //синхр по чтению из VRAM
 
-    for (int n_val = WORK_GROUP_SIZE; n_val>1; n_val/=2){
-        if(2*localID < n_val){
-            input_local[localID]+=input_local[localID+n_val/2];
+    for (int n_y = 0; n_y<Nr; n_y++){
+        for(int n_x = 0; n_x<Nr; n_x++){
+            prod_vals[globalID*Nr*Nr + n_y*Nr + n_x]=
+                kern_vals[n_y*Nr + n_x] * in_data[globalID];
         }
-        barrier(CLK_LOCAL_MEM_FENCE);
+        
     }
     
-    if(localID==0){
-        atom_add(res, input_local[localID]);
-    }
     
 }
