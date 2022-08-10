@@ -19,22 +19,26 @@
 согласно выбранному алгоритму~\cite{book_Zhuk},
 выполняется следующим образом: 
 %определяется следующим образом: 
-%\begin{equation}
-%  \label{eq:recv_common}
-%  \mathcal{G}_r(\varphi, x, h) = \sum_{k=-\left \lfloor \frac{r+1}{2} \right \rfloor}^{K-1+\left \lfloor \frac{r+1}{2} \right \rfloor}
-%  \varphi(u^{(k)})
-%  \psi_{r+2}\left(\frac{x}{h}-k}\right),
-%\end{equation}
-%где $\psi_{h,r+2}(x-u^{(k)})$ ---  ядро В. А. Стеклова порядка $r+2$ с шагом $h$ (см., например,~\cite{book_Zhuk}),
-%$r$ --- целое число, $h>0$.
+
+1D случай 
+\begin{equation}
+  \label{eq:recv_common}
+  \mathcal{G}_r(\varphi, x, h) = \sum_{k=-\left \lfloor \frac{r+1}{2} \right \rfloor}^{K-1+\left \lfloor \frac{r+1}{2} \right \rfloor}
+  \varphi(u^{(k)})
+  \psi_{r+2}\left(\frac{x}{h}-k}\right),
+\end{equation}
+где $\psi_{h,r+2}(x-u^{(k)})$ ---  ядро В. А. Стеклова порядка $r+2$ с шагом $h$ (см., например,~\cite{book_Zhuk}),
+$r$ --- целое число, $h>0$.
+
+2D случай
 \emph{нижние индексы x -- 1, y -- 2}
  \begin{equation*}
    G_h(\varphi,x) = h_1 h_2\sum_{l_y} \sum_{l_x} {
      \varphi(u^{(l_x, l_y)})\psi_{h,r}(x-u^{(l)})
    }
-   = h_1 h_2 \sum_{k_y=-\left \lfloor \frac{r_y+1}{2} \right \rfloor}^{K_y-1+\left \lfloor}
+   = h_1 h_2 \sum_{k_y=-\left \lfloor \frac{r_y+1}{2} \right \rfloor}^{K_y-1+\left \lfloor \frac{r+1}{2} \right \rfloor}
    \psi_{h_2,r_y+2}(x_2-k_y)}
-     \sum_{k_x=-\left \lfloor \frac{r_y+1}{2} \right \rfloor}^{K_x-1+\left \lfloor}
+     \sum_{k_x=-\left \lfloor \frac{r_y+1}{2} \right \rfloor}^{K_x-1+\left \lfloor \frac{r+1}{2} \right \rfloor}
      \varphi(u^{(l_x, l_y)})\psi_{h_1,r_x+2}(x_1-k_x)}).
  \end{equation*}
 где %, в общем случае,
@@ -135,15 +139,16 @@ $x_k$ ($k=1,2$) обозначает ее $k$-ю координату.
 \textit{мелкой сеткой}.
 Обозначим $N^* = N+1$.
 В этих обозначениях количество узлов мелкой сетки $M = N^* (K-1) + 1$.
-Расположение узлов показано на рисунке~\ref{fig:reg_net}.
-\begin{figure}[h!]
-  \centering
-  %\includegraphics[width=\textwidth,height=7cm]{modules} 
-  \includegraphics{reg_net}
-  \caption{Расположение узлов регулярной сетки}
-  \label{fig:reg_net}
-\end{figure}
-\FloatBarrier 
+
+%Расположение узлов показано на рисунке~\ref{fig:reg_net}.
+%\begin{figure}[h!]
+%  \centering
+%  %\includegraphics[width=\textwidth,height=7cm]{modules} 
+%  \includegraphics{reg_net}
+%  \caption{Расположение узлов регулярной сетки}
+%  \label{fig:reg_net}
+%\end{figure}
+%\FloatBarrier 
 
 %Интервалы между узлами крупной сетки для удобства
 %последовательно пронумеруем номером $i$ (см. рисунок~\ref{fig:reg_net}),
@@ -173,6 +178,9 @@ $\Psi_{2}$ и $\Psi_{4}$ --- массивы,
 значений ядер $\psi_{4}$.
 %на двух смежных интервалах крупной сетки.
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Схема вычислений}
 
 
@@ -271,6 +279,10 @@ $\Psi_{2}$ и $\Psi_{4}$ --- массивы,
 соответствующих перечисленным выше этапам.
 
 
+%%%%%%%%%%%%
+%-->
+%%%%%%%%%%%
+\begin{comment}
 \subsection*{Параллельные алгоритмы}
 Алгоритмы восстановления данных без сглаживания и со сглаживанием
 обладают параллелизмом по данным. 
@@ -398,8 +410,10 @@ $P \le \left \lfloor \frac{K}{4N_{\text{ЭВЯ}}} \right \rfloor$ для
 %Например, даже при условии низкой пропускной способности коммуникационной среды
 %если система поддерживает DMA (т. е. предоставляет возможность передачи данных на фоне вычислений),
 %то велика вероятность, что эффективнее окажется вариант алгоритма с передачей данных.
+\end{comment}
 
 
+\begin{comment}
 \subsection*{Описание программной реализации}
 
 Алгоритмы восстановления данных без сглаживания и со сглаживанием
@@ -563,6 +577,7 @@ $4 \times 2N^*$
 Для организации хранения произведений применяется структура данных
 <<кольцевой буфер>>.
 
+\end{comment}
 
 %%
 %\bibitem {Zhuk}
