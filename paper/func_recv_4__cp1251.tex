@@ -8,43 +8,6 @@
 
 \label{sec:func_recv}
 
-\begin{comment}
-  
-\subsection*{Постановка задачи}
-
-Пусть задан отрезок $[a,b]$, который  
-разбит на  равные части с шагом  $h$.
-Узлы равномерной сетки 
-задаются следующим образом:
-$ u^{(k)} = a + kh $, где $k = 0, \ldots, K-1$,
-$u^{(0)} = a, u^{(K-1)} = b$.
-В точках $u^{(k)}$ 
-известны значения функции $\varphi$.
-Требуется найти гладкую на $[a,b]$
-функцию $g$ <<хорошо>> аппроксимирующую $\varphi$.
-
-
-\begin{figure}[h!]
-  \centering
-  %\includegraphics[width=\textwidth,height=7cm]{modules} 
-  \includegraphics{net}
-  \caption{Постановка задачи}
-  \label{fig:net_common}
-\end{figure}
-\FloatBarrier 
-
-Известны значения некоторой функции $\varphi$
-в $K$ узлах $ u^{(k)}$, %($k = 0, \ldots, {K-1}$), 
-равномерно расположенных с шагом $h$.
-Требуется приближённо найти неизвестные значения
-этой функции между заданными узлами. 
-
-Для решения поставленной задачи
-используется алгоритм,
-предложенный 
-В.~В.~Жуком (1993) в работе~\cite{book_Zhuk}.
-
-\end{comment}
 
 %\subsection*{Основные обозначения}
 \subsection*{Алгоритм восстановления данных}
@@ -56,18 +19,29 @@ $u^{(0)} = a, u^{(K-1)} = b$.
 согласно выбранному алгоритму~\cite{book_Zhuk},
 выполняется следующим образом: 
 %определяется следующим образом: 
-\begin{equation}
-  \label{eq:recv_common}
-  \mathcal{G}_r(\varphi, x, h) = \sum_{k=-\left \lfloor \frac{r+1}{2} \right \rfloor}^{K-1+\left \lfloor \frac{r+1}{2} \right \rfloor}
-  \varphi(u^{(k)})
-  \psi_{r+2}\left(\frac{x}{h}-k}\right),
-\end{equation}
+%\begin{equation}
+%  \label{eq:recv_common}
+%  \mathcal{G}_r(\varphi, x, h) = \sum_{k=-\left \lfloor \frac{r+1}{2} \right \rfloor}^{K-1+\left \lfloor \frac{r+1}{2} \right \rfloor}
+%  \varphi(u^{(k)})
+%  \psi_{r+2}\left(\frac{x}{h}-k}\right),
+%\end{equation}
 %где $\psi_{h,r+2}(x-u^{(k)})$ ---  ядро В. А. Стеклова порядка $r+2$ с шагом $h$ (см., например,~\cite{book_Zhuk}),
 %$r$ --- целое число, $h>0$.
+\emph{нижние индексы x -- 1, y -- 2}
+ \begin{equation*}
+   G_h(\varphi,x) = h_1 h_2\sum_{l_y} \sum_{l_x} {
+     \varphi(u^{(l_x, l_y)})\psi_{h,r}(x-u^{(l)})
+   }
+   = h_1 h_2 \sum_{k_y=-\left \lfloor \frac{r_y+1}{2} \right \rfloor}^{K_y-1+\left \lfloor}
+   \psi_{h_2,r_y+2}(x_2-k_y)}
+     \sum_{k_x=-\left \lfloor \frac{r_y+1}{2} \right \rfloor}^{K_x-1+\left \lfloor}
+     \varphi(u^{(l_x, l_y)})\psi_{h_1,r_x+2}(x_1-k_x)}).
+ \end{equation*}
 где %, в общем случае,
-$x$ произвольно расположен между узлами исходной равномерной сетки $u^{(k)} = kh$, $h>0$;
-%Пусть
-для 
+$x$ произвольно расположен между узлами исходной равномерной сетки
+$u^{(k_x, k_y)} = (k_xh_1, k_yh_2)$, $h_1>0$, $h_2>0$.
+
+Пусть
 $ \rho \in \mathbb{N}$, $t\in\mathbb{R}$, 
 %тогда 
 ядро В.~А.~Стеклова порядка $\rho$ определяется формулой
@@ -78,7 +52,17 @@ $ \rho \in \mathbb{N}$, $t\in\mathbb{R}$,
       \dfrac{1}{(\rho-1)!}\sum\limits_{0\leqslant k<\left(|t|+\frac{\rho}{2}\right)}(-1)^kC_{\rho}^k\left(|t|+\dfrac{\rho}{2}-k\right)^{\rho-1},&\ \text{если}\ |t|\leqslant \dfrac{\rho}{2},\\
      0,&\ \text{если}\ |t| > \dfrac{\rho}{2}.
     \end{cases} 
-  \end{equation}
+\end{equation}
+
+Если рассматривается некоторая величина $x\in\mathbb{R}^2,$ то
+$x_k$ ($k=1,2$) обозначает ее $k$-ю координату.
+ 
+Пусть $t=(t_1,t_2),\ r=(r_1,r_2),\ r_1,r_2 \in \mathbb{N},\  w = (w_1,w_2),\ w_1,w_2 > 0.$
+    \begin{equation*}
+      \psi_{w,r}(t)=\psi_{w_1,r_1}(t_1)\psi_{w_2,r_2}(t_2).
+    \end{equation*}
+
+
 В настоящей работе нам потребуются 
 частные случаи формулы~\eqref{eq:psi_common} для 
 ядер порядков 2 и 4, приведённые, соответственно, ниже 
@@ -102,6 +86,7 @@ $ \rho \in \mathbb{N}$, $t\in\mathbb{R}$,
     0,&\ \text{если}\ |t| > 2.
   \end{cases}
 \end{align}
+
 
 
 Из формулы~\eqref{eq:recv_common} следует, что для вычислений

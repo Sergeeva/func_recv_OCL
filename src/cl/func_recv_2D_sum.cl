@@ -34,6 +34,32 @@ __kernel void sum(__global const float* prod_vals,
 
     //barrier(CLK_LOCAL_MEM_FENCE); //барьер по чтению из VRAM
 
+    //TODO:: fix it!!
+    // Суммировать ВСЕ точки вокруг!
+    
+    result[y*(N*K_x) + x] = 0.0;
+    
+    for (int i_y = 0; i_y < r/2; i_y++){
+        for (int i_x = 0; i_x < r/2; i_x++){
+            // по оси x (или координата 1)
+             // "убывающая" половина по оси x 
+            if((k_x - i_x)>=0) //проверка выхода за границу сетки
+                result[y*(N*K_x) + x] += prod_vals[((k_x-i_x)+k_y*K_x)*Nr*Nr + m_y*Nr + (i_x*N + m_x)];
+            // "возрастающая" половина по оси x 
+            if((k_x + i_x)<=K_x) //проверка выхода за границу сетки
+                result[y*(N*K_x) + x] += prod_vals[((k_x+i_x)+k_y*K_x)*Nr*Nr + m_y*Nr + (i_x*N - m_x)];
+
+            //по оси y (или координата 2)
+            //"убывающая" половина, исключая начальную точку
+            if((k_y - i_y)>=0) //проверка выхода за границу сетки
+                result[y*(N*K_x) + x] += prod_vals[(k_x+(k_y-i_y)*K_x)*Nr*Nr + (i_y*N + m_y)*Nr + m_x];
+            //"возрастающая" половина
+            if((k_y + i_y)<=K_y) //проверка выхода за границу сетки
+                result[y*(N*K_x) + x] += prod_vals[(k_x+(k_y+i_y)*K_x)*Nr*Nr + (i_y*N - m_y)*Nr + m_x];
+        }
+    }
+    
+    /*
     //инициализация суммы в точке мелной сетки
     result[y*(N*K_x) + x] = prod_vals[(k_x+k_y)*Nr*Nr + m_y*Nr + m_x];
 
@@ -49,7 +75,6 @@ __kernel void sum(__global const float* prod_vals,
             result[y*(N*K_x) + x] += prod_vals[((k_x+i)+k_y*K_x)*Nr*Nr + m_y*Nr + (i*N - m_x)];
     }
     
-
     //суммирование по оси y  --- аналогично
     // "убывающая" половина, исключая начальную точку
     for(int i = 1; i < r/2; i++){
@@ -61,6 +86,7 @@ __kernel void sum(__global const float* prod_vals,
         if((k_y + i)<=K_y)
             result[y*(N*K_x) + x] += prod_vals[(k_x+(k_y+i)*K_x)*Nr*Nr + (i*N - m_y)*Nr + m_x];
     }
+*/
 
     /*
     //atomics example
