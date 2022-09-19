@@ -9,7 +9,7 @@ __kernel void prod(    __global const float* in_data,
                         int Nr, //размер 
                         volatile __global float* prod_vals){
 
-    int localID = get_local_id(0);
+    //int localID = get_local_id(0);
     int globalID = get_global_id(0);
 
     //__local int input_local[WORK_GROUP_SIZE];

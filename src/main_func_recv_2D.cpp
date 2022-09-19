@@ -5,6 +5,11 @@
 #include <libgpu/context.h>
 #include <libgpu/shared_device_buffer.h>
 
+
+#include <f_kernels_2d.h>
+#include <def_types.h>
+#include <imit_test_func_2d.h>
+
 // Этот файл будет сгенерирован автоматически в момент сборки - см. convertIntoHeader в CMakeLists.txt:22
 //#include "cl/sum_cl.h"
 #include "cl/func_recv_2D_prod_cl.h"
@@ -12,6 +17,7 @@
 
 
 #include <vector>
+#include <fstream>
 
 
 template<typename T>
@@ -33,14 +39,14 @@ int main(int argc, char **argv)
 // Определяем размер задачи 
 
 // Кол-во узлов крупной сетки
-int K_x = 128;
-int K_y = 128; // а если K_x!=K_y ??
+int K_x = 32;
+int K_y = 32; // а если K_x!=K_y ??
 int K = K_x*K_y;
 
 //Количество узлов мелкой сетки в интервале крупной
 //без учёта левой границы
 //одинаковое по каждой координате
-int N = 5; //==N_x ==N_y ??
+int N = 3; //==N_x ==N_y ??
 
 //Количество узлов мелкой сетки
 int M_x = (N+1)*K_x;
@@ -50,30 +56,89 @@ int M = M_x*M_y;
 //Порядок ядра (чётное значение)
 int r = 2; //4
 
-// Размер !четверти! ядра
-int Nr = (N+1)*r/4; 
-
 // Массивы (матрицы) в DRAM
 // (host memory)
 
 std::vector<float> in_data(K); //NB: в общем случае значения мб не только float, но и вектора
+
+//Инициализируем ТЕСТОВЫЕ 
+//входные данные
+// см. imit_test_func_2d.h
+t_vector_2d_f h;
+h._1 = 1.0f;
+h._2 = 1.0f;
+
+t_vector_2d_f coeffs[2];
+coeffs[0]._1 = -2.0f;
+coeffs[0]._2 = 5.0f;
+
+coeffs[1]._1 = 10.0f;
+coeffs[1]._2 = -3.0f;
+
+
+//const_2d(in_data.data(), K_y, K_x, h, 5.0);
+
+//line_func_2d(in_data.data(), K_y, K_x, h, coeffs);
+
+//reverse_polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs);
+
+t_vector_2d_f coeffs3[2];
+coeffs3[0]._1 = -2.0f;
+coeffs3[0]._2 = 5.0f;
+
+coeffs3[1]._1 = 10.0f;
+coeffs3[1]._2 = -3.0f;
+
+coeffs3[2]._1 = 1.0f;
+coeffs3[2]._2 = -1.0f;
+
+polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs3);
+//////////////////////////////////////////////////////////////////////
+
 std::vector<float> out_data(M);
 std::vector<float> out_data_etal(M);
 
+//////////////////////////////////////////////////////////////////////
+
+// Размер !четверти! ядра
+int Nr = (N+1)*(r/2) + 1; 
+
 // значения ядра 
 //храним четверть (правую нижнюю) с учётом симметричности по обоим координатам
-std::vector<float> kern_vals(Nr*Nr); 
+std::vector<float> kern_vals(Nr*Nr);
+//Инициализируем значения ядер
+std::cout<<"init kernels r="<<r<<std::endl;
+int Nr1 = (N+1)*(r/2);
+if(r == 2){
+    for (int y = 0, i = 0; y >= -Nr1; y--, i++){
+        for(int x = 0, j = 0; x <= Nr1; x++, j++){
+            t_vector_2d_f t;
+            t._1 = x/(float)Nr1;
+            t._2 = y/(float)Nr1;
+            kern_vals[i*Nr+j] = psi_2_2d(t);
+            std::cout<<kern_vals[i*Nr+j]<<"  ";
+        }
+        std::cout << std::endl;
+    }
+}else if (r == 4){
+    for (int y = 0, i = 0; y >= -Nr1; y--, i++){
+        for(int x = 0, j = 0; x <= Nr1; x++, j++){
+            t_vector_2d_f t;
+            t._1 = x/(float)Nr1;
+            t._2 = y/(float)Nr1;
+            kern_vals[i*Nr+j] = psi_4_2d(t);
+            std::cout<<kern_vals[i*Nr+j]<<"  ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+
+
 
 // значения произведений
 // для каждого элемента крупной сетки хранится вычисляется матрица произведений
 std::vector<float> prod_vals((Nr*Nr)*K); //(((N+1)*r/2)*((N+1)*r/2)*K); //результат работы kern_prod
-
-
-// Имитируем входные данные :: крупную сетку 
-// TODO::использовать imit_test_fun_2d
-{
-
-}
 
 // Считаем эталон 
 {
@@ -117,14 +182,17 @@ std::vector<float> prod_vals((Nr*Nr)*K); //(((N+1)*r/2)*((N+1)*r/2)*K); //рез
         //kern_sum.compile(false);
 
     ocl::Kernel kern_prod(prod_kernel, prod_kernel_length, "prod");
-    kern_prod.compile(true);
+    kern_prod.compile(false);
 
     ocl::Kernel kern_sum(sum_kernel, sum_kernel_length, "sum");
     kern_sum.compile(true);
+    
 
 // 2D размер задачи для kern_prod
         unsigned int workGroupSize_1 = 128;
         unsigned int global_work_size_1 = (K + workGroupSize_1 - 1) / workGroupSize_1 * workGroupSize_1; //for kern_prod
+
+        std::cout<<global_work_size_1<<std::endl;
 
 
 // 2D размер задачи для kern_sum
@@ -132,6 +200,8 @@ std::vector<float> prod_vals((Nr*Nr)*K); //(((N+1)*r/2)*((N+1)*r/2)*K); //рез
         unsigned int workGroupSize_2y = 32;
         unsigned int global_work_size_2x = (M_x + workGroupSize_2x - 1) / workGroupSize_2x * workGroupSize_2x;
         unsigned int global_work_size_2y = (M_y + workGroupSize_2y - 1) / workGroupSize_2y * workGroupSize_2y;
+
+        std::cout<<global_work_size_2x<<"x"<<global_work_size_2y<<std::endl;
 //
 
         //timer t;  
@@ -156,12 +226,48 @@ std::vector<float> prod_vals((Nr*Nr)*K); //(((N+1)*r/2)*((N+1)*r/2)*K); //рез
                                             global_work_size_2x, global_work_size_2y),
                             prod_vals_gpu, 
                             K_x, K_y, 
-                            (N+1), r, 
+                            (N+1), r, Nr,
                             out_data_gpu);
         
             std::cout<<"[kern_sum] exec done"<<std::endl;
 
-            //res_gpu.readN(&sum, 1); //VRAM -> DRAM
+            out_data_gpu.readN(out_data.data(), M); //VRAM -> DRAM
+
+            /////////////////////////////////////////////////
+            //Запись в файл результата из RAM
+            /////////////////////////////////////////////////
+            std::ofstream out_file;
+            out_file.open("../data_save/func_recv_2d__result.dat");
+
+            if (out_file.is_open()){
+                std::cout<<"WRITING file with result"<<std::endl;
+                for(int i = 0; i < M_y; i++){
+                    for(int j = 0; j < M_x; j++){
+                        out_file<<out_data[i*M_x + j]<<"  ";
+                    }
+                out_file<<std::endl;
+                }            
+                out_file.close();
+            }
+
+
+            /////////////////////////////////////////////////
+            //Запись в файл входа для проверки
+            /////////////////////////////////////////////////
+            std::ofstream in_file;
+            in_file.open("../data_save/func_recv_2d__input.dat");
+
+            if (in_file.is_open()){
+                std::cout<<"WRITING file with input"<<std::endl;
+                for(int i = 0; i < K_y; i++){
+                    for(int j = 0; j < K_x; j++){
+                        in_file<<in_data[i*K_x + j]<<"  ";
+                    }
+                    in_file<<std::endl;
+                }            
+                in_file.close();
+            }
+
 
             //EXPECT_THE_SAME(reference_sum, sum, "GPU <OCL kern> result should be consistent!");
 
