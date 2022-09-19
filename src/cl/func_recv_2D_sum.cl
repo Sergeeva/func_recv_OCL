@@ -24,8 +24,8 @@ __kernel void sum(__global const float* prod_vals,
     int m_y = globalID_y % N;
 
     //индекс в четвертинке ядра
-    int mm_x = globalID_x % Nr;
-    int mm_y = globalID_y % Nr;
+    //int mm_x = globalID_x % Nr;
+    //int mm_y = globalID_y % Nr;
 
     //индекс в мелкой сетке
     int x = globalID_x;
@@ -47,31 +47,31 @@ __kernel void sum(__global const float* prod_vals,
     for (int i_x = 0; i_x < r/2; i_x++){
         // "убывающая" половина по оси y
         for (int i_y = 0; i_y < r/2; i_y++){ 
-    //if((k_x - i_x)>=0 && (i_x*N + m_x) < (i_x+1)*N){ //проверка выхода за границу сетки
+        if((k_x - i_x)>=0 && ((k_y-i_y)>=0)){ //проверка выхода за границу сетки
             result[y*(N*K_x) + x] += prod_vals[((k_x-i_x)+(k_y-i_y)*K_x)*Nr*Nr + (i_y*N + m_y)*Nr + (i_x*N + m_x)];
-    //}
+        }
         }
         //"возрастающая" половина по оси y
         for (int i_y = 1; i_y <= r/2; i_y++){  
-        //if((k_y + Nr)<=K_y) {//проверка выхода за границу сетки
-            result[y*(N*K_x) + x] += prod_vals[((k_x-i_x)+(k_y+i_y)*K_x)*Nr*Nr + (i_y*N - m_y)*Nr + (i_x*N + m_x)];
-        //}
-         }
+        if((k_x-i_x)>=0 && (k_y+i_y)<K_y) {//проверка выхода за границу сетки
+            result[y*(N*K_x) + x] += prod_vals[((k_x-i_x)+(k_y+i_y)*K_x)*Nr*Nr + (i_y*N  - m_y)*Nr + (i_x*N + m_x)];
+        }
+        }
     }
 
     // "возрастающая" половина по оси x 
     for (int i_x = 1; i_x <= r/2; i_x++){    
     // "убывающая" половина по оси y
         for (int i_y = 0; i_y < r/2; i_y++){ 
-    //if((k_x + i_x)<=K_x && ((i_x+1)*N - m_x) > i_x*N){ //проверка выхода за границу сетки
-            result[y*(N*K_x) + x] += prod_vals[((k_x+i_x)+(k_y-i_y)*K_x)*Nr*Nr + (i_y*N + m_y)*Nr + (i_x*N - m_x)];
-    //}
+        if((k_x + i_x)<K_x && (k_y-i_y)>=0){ //проверка выхода за границу сетки
+            result[y*(N*K_x) + x] += prod_vals[((k_x+i_x)+(k_y-i_y)*K_x)*Nr*Nr + (i_y*N + m_y)*Nr + (i_x*N  - m_x)];
+        }
         }
     //"возрастающая" половина по оси y
         for (int i_y = 1; i_y <= r/2; i_y++){  
-    //if((k_x + i_x)<=K_x && ((i_x+1)*N - m_x) > i_x*N){ //проверка выхода за границу сетки
-            result[y*(N*K_x) + x] += prod_vals[((k_x+i_x)+(k_y+i_y)*K_x)*Nr*Nr + (i_y*N - m_y)*Nr + (i_x*N - m_x)];
-    //}
+        if((k_x + i_x)<K_x && (k_y+i_y)<K_y){ //проверка выхода за границу сетки
+            result[y*(N*K_x) + x] += prod_vals[((k_x+i_x)+(k_y+i_y)*K_x)*Nr*Nr + (i_y*N  - m_y)*Nr + (i_x*N  - m_x)];
+        }
         }
 
     }

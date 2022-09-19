@@ -54,7 +54,7 @@ int M_y = (N+1)*K_y;
 int M = M_x*M_y;
 
 //Порядок ядра (чётное значение)
-int r = 2; //4
+int r = 4; //4
 
 // Массивы (матрицы) в DRAM
 // (host memory)
@@ -124,8 +124,8 @@ if(r == 2){
     for (int y = 0, i = 0; y >= -Nr1; y--, i++){
         for(int x = 0, j = 0; x <= Nr1; x++, j++){
             t_vector_2d_f t;
-            t._1 = x/(float)Nr1;
-            t._2 = y/(float)Nr1;
+            t._1 = x/(float)(N+1);
+            t._2 = y/(float)(N+1);
             kern_vals[i*Nr+j] = psi_4_2d(t);
             std::cout<<kern_vals[i*Nr+j]<<"  ";
         }
