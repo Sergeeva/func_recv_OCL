@@ -70,9 +70,9 @@ h._2 = 1.0f;
 
 t_vector_2d_f coeffs[2];
 coeffs[0]._1 = -2.0f;
-coeffs[0]._2 = 5.0f;
+coeffs[0]._2 = 2.0f;
 
-coeffs[1]._1 = 10.0f;
+coeffs[1]._1 = 5.0f;
 coeffs[1]._2 = -3.0f;
 
 
@@ -80,7 +80,7 @@ coeffs[1]._2 = -3.0f;
 
 //line_func_2d(in_data.data(), K_y, K_x, h, coeffs);
 
-//reverse_polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs);
+reverse_polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs);
 
 t_vector_2d_f coeffs3[2];
 coeffs3[0]._1 = -2.0f;
@@ -89,10 +89,11 @@ coeffs3[0]._2 = 5.0f;
 coeffs3[1]._1 = 10.0f;
 coeffs3[1]._2 = -3.0f;
 
-coeffs3[2]._1 = 1.0f;
+coeffs3[2]._1 = 5.0f;
 coeffs3[2]._2 = -1.0f;
 
-polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs3);
+
+//polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs3);
 //////////////////////////////////////////////////////////////////////
 
 std::vector<float> out_data(M);

@@ -25,10 +25,10 @@ $ \rho \in \mathbb{N}$, $t\in\mathbb{R}$,
 ядро В.~А.~Стеклова порядка $\rho$ определяется формулой
 \begin{equation}
     \label{eq:psi_common}
-    \psi_{\rho}(t)&=
+    \psi_{\rho}(t)=
     \begin{cases}
-      \dfrac{1}{(\rho-1)!}\sum\limits_{0\leqslant k<\left(|t|+\frac{\rho}{2}\right)}(-1)^kC_{\rho}^k\left(|t|+\dfrac{\rho}{2}-k\right)^{\rho-1},&\ \text{если}\ |t|\leqslant \dfrac{\rho}{2},\\
-     0,&\ \text{если}\ |t| > \dfrac{\rho}{2}.
+      \dfrac{1}{(\rho-1)!}\sum\limits_{0\leqslant k<\left(|t|+\frac{\rho}{2}\right)}(-1)^kC_{\rho}^k\left(|t|+\dfrac{\rho}{2}-k\right)^{\rho-1},\ \text{если}\ |t|\leqslant \dfrac{\rho}{2},\\
+     0,\ \text{если}\ |t| > \dfrac{\rho}{2}.
     \end{cases} 
 \end{equation}
 
@@ -93,9 +93,9 @@ $r$ --- целое число, $h>0$.
    \varphi(u^{(\boldsymbol{k})})
    \psi_{\boldsymbol{h}, \boldsymbol{r}}(u^{(\boldsymbol{m})}-u^{(\boldsymbol{k})}) = 
    \sum_{k_2=-\left \lfloor \frac{r_2+1}{2} \right \rfloor}^{K_y-1+\left \lfloor \frac{r_2+1}{2} \right \rfloor}
-   \psi_{h_2,r_2+2}(m_2-k_2)}
+   \psi_{h_2,r_2+2}(m_2-k_2) 
      \sum_{k_1=-\left \lfloor \frac{r_1+1}{2} \right \rfloor}^{K_x-1+\left \lfloor \frac{r_1+1}{2} \right \rfloor}
-     \varphi(u^{(\boldsymbol{k})})\psi_{h_1,r_1+2}(m_1-k_1)}).
+     \varphi(u^{(\boldsymbol{k})})\psi_{h_1,r_1+2}(m_1-k_1).
 %   \end{split}
  \end{equation}
 %где %, в общем случае,
@@ -219,14 +219,15 @@ $r$ --- целое число, $h>0$.
   G_r(m) &= \sum_{i_2 = 0}^{r_2/2}
   \sum_{i_1 = 0}^{r_1/2}
   \left(
-  F \left( \left \lfloor \frac{m_1}{N^*} \right \rfloor - i_1, \left \lfloor \frac{m_2}{N^*} \right \rfloor - i_2,
-  \right)
-  \Psi_{r}(i_1*N^* + m_1\bmod N^*, i_2*N^* + m_2\bmod N^* ) +{}\\
-  & + F \left(
-  \left \lfloor \frac{m_1}{N^*} \right \rfloor + i_1,
-  \left \lfloor \frac{m_2}{N^*} \right \rfloor + i_2
-  \right)
-  \Psi_{r}(i_1*N^* - m_1 \bmod N^*, i_2*N^* - m_2\bmod N^*)
+    F \left( \left \lfloor \frac{m_1}{N^*} \right \rfloor - i_1,
+             \left \lfloor \frac{m_2}{N^*} \right \rfloor - i_2,
+      \right)
+    \Psi_{r}(i_1*N^* + m_1\bmod N^*, i_2*N^* + m_2\bmod N^* ) +{} \right.\\
+        & \left. + F \left(
+                \left \lfloor \frac{m_1}{N^*} \right \rfloor + i_1,
+                \left \lfloor \frac{m_2}{N^*} \right \rfloor + i_2
+              \right)
+            \Psi_{r}(i_1*N^* - m_1 \bmod N^*, i_2*N^* - m_2\bmod N^*)
   \right)
   \end{split}
 \end{equation}
