@@ -48,6 +48,25 @@
 \fi
 \graphicspath{{images/}}
 
+\usepackage[
+  style=gost-numeric,
+  backend=biber,
+  language=auto,
+  hyperref=auto,
+  autolang=other,
+  defernumbers,
+  sorting=none
+]{biblatex}
+
+\addbibresource{bibl__cp1251.bib}
+
+
+%Убрать тире в библиографии
+\renewcommand*{\newblockpunct}{\addperiod\space\bibsentence}
+
+%убрать пробелы перед : и ;
+\renewcommand*{\addcolondelim}{\addcolon\space}
+\renewcommand*{\addsemicolondelim}{\addsemicolon\space}
 
 \makeatletter
 \renewcommand{\@biblabel}[1]{#1.\hfill}
@@ -103,9 +122,10 @@
 
 \end{comment}
 
-\bibliographystyle{gost705}
-\bibliography{bibl__cp1251}{}
+%\bibliographystyle{gost705}
+%\bibliography{bibl__cp1251}{}
 
+\printbibliography[title = {Литература}]
 
 
 %\newpage
