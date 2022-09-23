@@ -6,6 +6,7 @@
 %\usepackage[backend=biber,style=numeric]{biblatex}
 %\addbibresource{bibl.bib}
 
+
 \usepackage{geometry} %способ ручной установки полей
 \geometry{top=2cm} %поле сверху
 \geometry{bottom=2.5cm} %поле снизу
@@ -19,6 +20,9 @@
 %\usepackage[cp1251]{inputenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
+
+%\DeclareUnicodeCharacter{0084}{}
+%\usepackage{utf8math}
 
 % Использовать полужирное начертание для векторов
 \let\vec=\mathbf
@@ -99,6 +103,8 @@ isbn=false,% Показывать или нет ISBN, ISSN, ISRN
 \makeatletter
 \renewcommand{\@biblabel}[1]{#1.\hfill}
 \makeatother
+
+\DefineBibliographyStrings{russian}{number={\textnumero}}
 
 \begin{document}
 
