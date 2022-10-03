@@ -19,7 +19,97 @@
 #include <vector>
 #include <fstream>
 
+//////////////////////////////////////////
+//Последовательная Эмуляция выч. ядер
+//////////////////////////////////////////
 
+void prod_kern_emul(    const float* in_data, 
+                        int K, // кол-во узлов крупной сетки
+                        const float* kern_vals,
+                        int Nr, 
+                        float* prod_vals,
+                        int globalID){
+
+//std::cout<<"prod_kern_emul STARTED"<<std::endl;
+
+    for (int n_y = 0; n_y<Nr; n_y++){
+        for(int n_x = 0; n_x<Nr; n_x++){
+            prod_vals[globalID*Nr*Nr + n_y*Nr + n_x]=
+                kern_vals[n_y*Nr + n_x] * in_data[globalID];
+        };
+    };  
+
+//std::cout<<"prod_kern_emul ENDED"<<std::endl;
+}
+        
+void sum_kern_emul(const float* prod_vals, 
+                    int K_x, int K_y, 
+                    int N, int r, int Nr, 
+                    float* result, 
+                    int globalID_x, int globalID_y){
+
+
+//std::cout<<"sum_kern_emul STARTED"<<std::endl;
+
+    //индекс ближайшей точки крупной сетки слева-сверху
+    //т.е. округление вниз!!
+    int k_x = globalID_x / N;
+    int k_y = globalID_y / N;
+
+    //индекс в ячейке мелкой сетки 
+    int m_x = globalID_x % N;
+    int m_y = globalID_y % N;
+
+    //индекс в мелкой сетке
+    int x = globalID_x;
+    int y = globalID_y;
+
+    result[y*(N*K_x) + x] = 0.0;
+
+//std::cout<<"sum_kern_emul [x dec]"<<std::endl;                             
+    // "убывающая" половина по оси x    
+    for (int i_x = 0; i_x < r/2; i_x++){
+ //       std::cout<<"sum_kern_emul [y dec]"<<std::endl;  
+        // "убывающая" половина по оси y
+        for (int i_y = 0; i_y < r/2; i_y++){ 
+            if((k_x - i_x)>=0 && ((k_y-i_y)>=0)){ //проверка выхода за границу сетки
+                result[y*(N*K_x) + x] += prod_vals[((k_x-i_x)+(k_y-i_y)*K_x)*Nr*Nr + (i_y*N + m_y)*Nr + (i_x*N + m_x)];
+            }
+        }
+//        std::cout<<"sum_kern_emul [y inc]"<<std::endl;  
+        //"возрастающая" половина по оси y
+        for (int i_y = 1; i_y <= r/2; i_y++){  
+        if((k_x-i_x)>=0 && (k_y+i_y)<K_y) {//проверка выхода за границу сетки
+            result[y*(N*K_x) + x] += prod_vals[((k_x-i_x)+(k_y+i_y)*K_x)*Nr*Nr + (i_y*N  - m_y)*Nr + (i_x*N + m_x)];
+        }
+        }
+    }
+
+ //   std::cout<<"sum_kern_emul [x inc]"<<std::endl;  
+    // "возрастающая" половина по оси x 
+    for (int i_x = 1; i_x <= r/2; i_x++){    
+    // "убывающая" половина по оси y
+ //       std::cout<<"sum_kern_emul [y dec]"<<std::endl;  
+        for (int i_y = 0; i_y < r/2; i_y++){ 
+        if((k_x + i_x)<K_x && (k_y-i_y)>=0){ //проверка выхода за границу сетки
+            result[y*(N*K_x) + x] += prod_vals[((k_x+i_x)+(k_y-i_y)*K_x)*Nr*Nr + (i_y*N + m_y)*Nr + (i_x*N  - m_x)];
+        }
+        }
+
+//        std::cout<<"sum_kern_emul [y inc]"<<std::endl;  
+    //"возрастающая" половина по оси y
+        for (int i_y = 1; i_y <= r/2; i_y++){  
+        if((k_x + i_x)<K_x && (k_y+i_y)<K_y){ //проверка выхода за границу сетки
+            result[y*(N*K_x) + x] += prod_vals[((k_x+i_x)+(k_y+i_y)*K_x)*Nr*Nr + (i_y*N  - m_y)*Nr + (i_x*N  - m_x)];
+        }
+        }
+
+    }
+//std::cout<<"sum_kern_emul ENDED"<<std::endl;
+        
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
 template<typename T>
 void raiseFail(const T &a, const T &b, std::string message, std::string filename, int line)
 {
@@ -39,19 +129,19 @@ int main(int argc, char **argv)
 // Определяем размер задачи 
 
 // Кол-во узлов крупной сетки
-int K_x = 32;
-int K_y = 32; // а если K_x!=K_y ??
-int K = K_x*K_y;
+const int K_x = 32;
+const int K_y = 32; // а если K_x!=K_y ??
+const int K = K_x*K_y;
 
 //Количество узлов мелкой сетки в интервале крупной
 //без учёта левой границы
 //одинаковое по каждой координате
-int N = 3; //==N_x ==N_y ??
+const int N = 3; //==N_x ==N_y ??
 
 //Количество узлов мелкой сетки
-int M_x = (N+1)*K_x;
-int M_y = (N+1)*K_y;
-int M = M_x*M_y;
+const int M_x = (N+1)*K_x;
+const int M_y = (N+1)*K_y;
+const int M = M_x*M_y;
 
 //Порядок ядра (чётное значение)
 int r = 4; //4
@@ -109,7 +199,7 @@ int Nr = (N+1)*(r/2) + 1;
 std::vector<float> kern_vals(Nr*Nr);
 //Инициализируем значения ядер
 std::cout<<"init kernels r="<<r<<std::endl;
-int Nr1 = (N+1)*(r/2);
+const int Nr1 = (N+1)*(r/2);
 if(r == 2){
     for (int y = 0, i = 0; y >= -Nr1; y--, i++){
         for(int x = 0, j = 0; x <= Nr1; x++, j++){
@@ -144,9 +234,26 @@ std::vector<float> prod_vals((Nr*Nr)*K); //(((N+1)*r/2)*((N+1)*r/2)*K); //рез
 // Считаем эталон 
 {
 
+for(int k = 0; k<K; k++)
+    prod_kern_emul( in_data.data(), K, // кол-во узлов крупной сетки
+                    kern_vals.data(), Nr, 
+                    prod_vals.data(),
+                    k); //итерация по globalID
+}
+
+for (int m_y = 0; m_y<M_y; m_y++){
+    for(int m_x = 0; m_x<M_x; m_x++){
+
+     sum_kern_emul( prod_vals.data(), 
+                    K_x, K_y, 
+                    (N+1), r, Nr, 
+                    out_data.data(), 
+                    m_x, m_y);
+    }
 }
 
 //
+#if 0
 {
     // chooseGPUDevice:
     // - Если не доступо ни одного устройства - кинет ошибку
@@ -234,51 +341,53 @@ std::vector<float> prod_vals((Nr*Nr)*K); //(((N+1)*r/2)*((N+1)*r/2)*K); //рез
 
             out_data_gpu.readN(out_data.data(), M); //VRAM -> DRAM
 
-            /////////////////////////////////////////////////
-            //Запись в файл результата из RAM
-            /////////////////////////////////////////////////
-            std::ofstream out_file;
-            out_file.open("../data_save/func_recv_2d__result.dat");
-
-            if (out_file.is_open()){
-                std::cout<<"WRITING file with result"<<std::endl;
-                for(int i = 0; i < M_y; i++){
-                    for(int j = 0; j < M_x; j++){
-                        out_file<<out_data[i*M_x + j]<<"  ";
-                    }
-                out_file<<std::endl;
-                }            
-                out_file.close();
-            }
-
-
-            /////////////////////////////////////////////////
-            //Запись в файл входа для проверки
-            /////////////////////////////////////////////////
-            std::ofstream in_file;
-            in_file.open("../data_save/func_recv_2d__input.dat");
-
-            if (in_file.is_open()){
-                std::cout<<"WRITING file with input"<<std::endl;
-                for(int i = 0; i < K_y; i++){
-                    for(int j = 0; j < K_x; j++){
-                        in_file<<in_data[i*K_x + j]<<"  ";
-                    }
-                    in_file<<std::endl;
-                }            
-                in_file.close();
-            }
-
-
-            //EXPECT_THE_SAME(reference_sum, sum, "GPU <OCL kern> result should be consistent!");
-
-            //std::cout<<"reference_sum = "<< reference_sum <<" :: sum = "<< sum <<std::endl;
-
-            //t.nextLap();
-        //}
-        //std::cout << "GPU <OCL kern>: " << t.lapAvg() << "+-" << t.lapStd() << " s" << std::endl;
-        //std::cout << "GPU <OCL kern>: " << (n/1000.0/1000.0) / t.lapAvg() << " millions/s" << std::endl;
-
     }
+#endif
+
+
+/////////////////////////////////////////////////
+//Запись в файл результата из RAM
+/////////////////////////////////////////////////
+std::ofstream out_file;
+out_file.open("../data_save/func_recv_2d__result.dat");
+
+if (out_file.is_open()){
+    std::cout<<"WRITING file with result"<<std::endl;
+        for(int i = 0; i < M_y; i++){
+            for(int j = 0; j < M_x; j++){
+                out_file<<out_data[i*M_x + j]<<"  ";
+            }
+            out_file<<std::endl;
+        }            
+        out_file.close();
+    }
+
+
+/////////////////////////////////////////////////
+//Запись в файл входа для проверки
+/////////////////////////////////////////////////
+std::ofstream in_file;
+in_file.open("../data_save/func_recv_2d__input.dat");
+
+if (in_file.is_open()){
+    std::cout<<"WRITING file with input"<<std::endl;
+        for(int i = 0; i < K_y; i++){
+            for(int j = 0; j < K_x; j++){
+                in_file<<in_data[i*K_x + j]<<"  ";
+            }
+            in_file<<std::endl;
+        }            
+        in_file.close();
+    }
+
+
+//EXPECT_THE_SAME(reference_sum, sum, "GPU <OCL kern> result should be consistent!");
+
+//std::cout<<"reference_sum = "<< reference_sum <<" :: sum = "<< sum <<std::endl;
+
+//t.nextLap();
+//std::cout << "GPU <OCL kern>: " << t.lapAvg() << "+-" << t.lapStd() << " s" << std::endl;
+//std::cout << "GPU <OCL kern>: " << (n/1000.0/1000.0) / t.lapAvg() << " millions/s" << std::endl;
+
     return 0;
 }

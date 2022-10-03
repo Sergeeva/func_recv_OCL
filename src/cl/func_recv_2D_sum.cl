@@ -31,6 +31,8 @@ __kernel void sum(__global const float* prod_vals,
     int x = globalID_x;
     int y = globalID_y;
 
+
+    
     //__local int input_local[WORK_GROUP_SIZE];
     //input_local[localID] = input[globalID];
 

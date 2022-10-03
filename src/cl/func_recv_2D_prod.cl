@@ -29,6 +29,9 @@ __kernel void prod(    __global const float* in_data,
             prod_vals[globalID*Nr*Nr + n_y*Nr + n_x]=
                 kern_vals[n_y*Nr + n_x] * in_local[localID]; //in_data[globalID];
         };
-    };   
+    };  
+    
+    //TODO::выгрузить результат для этой точки в VRAM по globalID
+
 }
         
