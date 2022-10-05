@@ -129,9 +129,11 @@ int main(int argc, char **argv)
 // Определяем размер задачи 
 
 // Кол-во узлов крупной сетки
-const int K_x = 32;
-const int K_y = 32; // а если K_x!=K_y ??
+const int K_x = 1024;
+const int K_y = 1024; // а если K_x!=K_y ??
 const int K = K_x*K_y;
+
+std::cout << "Coarse net size  " << K_x << "x" << K_y << std::endl;
 
 //Количество узлов мелкой сетки в интервале крупной
 //без учёта левой границы
@@ -142,6 +144,8 @@ const int N = 3; //==N_x ==N_y ??
 const int M_x = (N+1)*K_x;
 const int M_y = (N+1)*K_y;
 const int M = M_x*M_y;
+
+std::cout << "Fine net size  " << M_x << "x" << M_y << std::endl;
 
 //Порядок ядра (чётное значение)
 int r = 4; //4
@@ -172,7 +176,7 @@ coeffs[1]._2 = -3.0f;
 
 reverse_polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs);
 
-t_vector_2d_f coeffs3[2];
+t_vector_2d_f coeffs3[3];
 coeffs3[0]._1 = -2.0f;
 coeffs3[0]._2 = 5.0f;
 
@@ -207,9 +211,9 @@ if(r == 2){
             t._1 = x/(float)Nr1;
             t._2 = y/(float)Nr1;
             kern_vals[i*Nr+j] = psi_2_2d(t);
-            std::cout<<kern_vals[i*Nr+j]<<"  ";
+//            std::cout<<kern_vals[i*Nr+j]<<"  ";
         }
-        std::cout << std::endl;
+//        std::cout << std::endl;
     }
 }else if (r == 4){
     for (int y = 0, i = 0; y >= -Nr1; y--, i++){
@@ -218,9 +222,9 @@ if(r == 2){
             t._1 = x/(float)(N+1);
             t._2 = y/(float)(N+1);
             kern_vals[i*Nr+j] = psi_4_2d(t);
-            std::cout<<kern_vals[i*Nr+j]<<"  ";
+//            std::cout<<kern_vals[i*Nr+j]<<"  ";
         }
-        std::cout << std::endl;
+//       std::cout << std::endl;
     }
 }
 
@@ -231,29 +235,44 @@ if(r == 2){
 // для каждого элемента крупной сетки хранится вычисляется матрица произведений
 std::vector<float> prod_vals((Nr*Nr)*K); //(((N+1)*r/2)*((N+1)*r/2)*K); //результат работы kern_prod
 
-// Считаем эталон 
-{
 
-for(int k = 0; k<K; k++)
+{
+// Считаем эталон 
+//замеряем производительность
+
+timer t;
+for (int iter = 0; iter < benchmarkingIters; ++iter) {
+
+for(int k = 0; k<K; k++){
     prod_kern_emul( in_data.data(), K, // кол-во узлов крупной сетки
                     kern_vals.data(), Nr, 
                     prod_vals.data(),
                     k); //итерация по globalID
 }
 
-for (int m_y = 0; m_y<M_y; m_y++){
-    for(int m_x = 0; m_x<M_x; m_x++){
+for (int m_y = 0; m_y < M_y; m_y++) {
+    for (int m_x = 0; m_x < M_x; m_x++) {
 
-     sum_kern_emul( prod_vals.data(), 
-                    K_x, K_y, 
-                    (N+1), r, Nr, 
-                    out_data.data(), 
-                    m_x, m_y);
+        sum_kern_emul(prod_vals.data(),
+            K_x, K_y,
+            (N + 1), r, Nr,
+            out_data_etal.data(),
+            m_x, m_y);
     }
 }
+///
+t.nextLap();
+}
+
+std::cout << "CPU:     " << t.lapAvg() << "+-" << t.lapStd() << " s" << std::endl;
+//std::cout << "CPU:     " << (n / 1000.0 / 1000.0) / t.lapAvg() << " millions/s" << std::endl;
+}
+
+
 
 //
-#if 0
+#define OCL 1;
+#if OCL
 {
     // chooseGPUDevice:
     // - Если не доступо ни одного устройства - кинет ошибку
@@ -290,7 +309,7 @@ for (int m_y = 0; m_y<M_y; m_y++){
         //kern_sum.compile(false);
 
     ocl::Kernel kern_prod(prod_kernel, prod_kernel_length, "prod");
-    kern_prod.compile(false);
+    kern_prod.compile(true);
 
     ocl::Kernel kern_sum(sum_kernel, sum_kernel_length, "sum");
     kern_sum.compile(true);
@@ -299,50 +318,56 @@ for (int m_y = 0; m_y<M_y; m_y++){
 // 2D размер задачи для kern_prod
         unsigned int workGroupSize_1 = 128;
         unsigned int global_work_size_1 = (K + workGroupSize_1 - 1) / workGroupSize_1 * workGroupSize_1; //for kern_prod
-
-        std::cout<<global_work_size_1<<std::endl;
+        
+        std::cout<<"Global Work Size1  " << global_work_size_1 << std::endl;
 
 
 // 2D размер задачи для kern_sum
-        unsigned int workGroupSize_2x = 32;
-        unsigned int workGroupSize_2y = 32;
-        unsigned int global_work_size_2x = (M_x + workGroupSize_2x - 1) / workGroupSize_2x * workGroupSize_2x;
-        unsigned int global_work_size_2y = (M_y + workGroupSize_2y - 1) / workGroupSize_2y * workGroupSize_2y;
+        unsigned int workGroupSize_2x = 128;
+        unsigned int workGroupSize_2y = 1;
+        unsigned int global_work_size_2x = M_x; //(M_x + workGroupSize_2x - 1) / workGroupSize_2x * workGroupSize_2x;
+        unsigned int global_work_size_2y = M_y;//(M_y + workGroupSize_2y - 1) / workGroupSize_2y * workGroupSize_2y;
 
-        std::cout<<global_work_size_2x<<"x"<<global_work_size_2y<<std::endl;
-//
+         std::cout<<"Global Work Size2  " << global_work_size_2x << " x " << global_work_size_2y << std::endl;
 
-        //timer t;  
-        //for (int i=0; i<benchmarkingIters; ++i){
+        timer t;  
+        for (int i = 0; i < benchmarkingIters; ++i) {
 
-        // Прогружаем данные из векторов as
-        // DRAM --> VRAM
-        // (есть нетипизированный метод write для которого количество измеряется в байтах,
-        // и типизированный writeN, для которого количество измеряется в количестве float-элементов, т.к. gpu::gpu_mem_32f - это shared_device_buffer_typed<float>)
+            // Прогружаем данные из векторов as
+            // DRAM --> VRAM
+            // (есть нетипизированный метод write для которого количество измеряется в байтах,
+            // и типизированный writeN, для которого количество измеряется в количестве float-элементов, т.к. gpu::gpu_mem_32f - это shared_device_buffer_typed<float>)
             in_data_gpu.writeN(in_data.data(), K);
             out_data_gpu.writeN(out_data.data(), M);
-            kern_vals_gpu.writeN(kern_vals.data(), (Nr*Nr));
-            prod_vals_gpu.writeN(prod_vals.data(), (Nr*Nr)*K);
+            kern_vals_gpu.writeN(kern_vals.data(), (Nr * Nr));
+            prod_vals_gpu.writeN(prod_vals.data(), (Nr * Nr) * K);
 
-            kern_prod.exec( gpu::WorkSize(workGroupSize_1, global_work_size_1),
-                            in_data_gpu, K, 
-                            kern_vals_gpu, Nr, 
-                            prod_vals_gpu);
-            std::cout<<"[kern_prod] exec done"<<std::endl;
+            kern_prod.exec(gpu::WorkSize(workGroupSize_1, global_work_size_1),
+                in_data_gpu, K,
+                kern_vals_gpu, Nr,
+                prod_vals_gpu);
+            //std::cout<<"[kern_prod] exec done"<<std::endl;
 
-            kern_sum.exec( gpu::WorkSize(   workGroupSize_2x, workGroupSize_2y, 
-                                            global_work_size_2x, global_work_size_2y),
-                            prod_vals_gpu, 
-                            K_x, K_y, 
-                            (N+1), r, Nr,
-                            out_data_gpu);
-        
-            std::cout<<"[kern_sum] exec done"<<std::endl;
+            kern_sum.exec(gpu::WorkSize(workGroupSize_2x, workGroupSize_2y,
+                global_work_size_2x, global_work_size_2y),
+                prod_vals_gpu,
+                K_x, K_y,
+                (N + 1), r, Nr,
+                out_data_gpu);
+
+            //std::cout<<"[kern_sum] exec done"<<std::endl;
 
             out_data_gpu.readN(out_data.data(), M); //VRAM -> DRAM
 
+            t.nextLap();
+        }
+
+        std::cout << "GPU <OCL kern>: " << t.lapAvg() << "+-" << t.lapStd() << " s" << std::endl;
+        //std::cout << "GPU <OCL kern>: " << (n / 1000.0 / 1000.0) / t.lapAvg() << " millions/s" << std::endl;
     }
 #endif
+
+// EXPECT_THE_SAME(reference_sum, sum, "CPU result should be consistent!");
 
 
 /////////////////////////////////////////////////
@@ -380,14 +405,6 @@ if (in_file.is_open()){
         in_file.close();
     }
 
-
-//EXPECT_THE_SAME(reference_sum, sum, "GPU <OCL kern> result should be consistent!");
-
-//std::cout<<"reference_sum = "<< reference_sum <<" :: sum = "<< sum <<std::endl;
-
-//t.nextLap();
-//std::cout << "GPU <OCL kern>: " << t.lapAvg() << "+-" << t.lapStd() << " s" << std::endl;
-//std::cout << "GPU <OCL kern>: " << (n/1000.0/1000.0) / t.lapAvg() << " millions/s" << std::endl;
 
     return 0;
 }
