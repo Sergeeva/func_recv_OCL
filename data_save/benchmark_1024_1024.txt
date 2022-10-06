@@ -1,0 +1,60 @@
+Coarse net size o 1024x1024
+Fine net size  4096x4096
+init kernels r=4
+CPU:     1.83833+-0.00110554 s
+OpenCL devices:
+  Device #0: GPU. Radeon RX 590 Series (Ellesmere). Free memory: 8128/8192 Mb
+Using device #0: GPU. Radeon RX 590 Series (Ellesmere). Free memory: 8128/8192 Mb
+Building kernels for Radeon RX 590 Series (Ellesmere)...
+Kernels compilation done in 0.028 seconds
+Device 1
+        Program build log:
+
+
+Building kernels for Radeon RX 590 Series (Ellesmere)...
+Kernels compilation done in 0.049 seconds
+Device 1
+        Program build log:
+
+
+Global Work Size1  1048576
+Global Work Size2  4096 x 4096
+GPU <OCL kern>: 0.110333+-0.000471405 s
+
+------------------------------------------------------------------------------------------------------
+Coarse net size  1024x1024
+Fine net size  4096x4096
+init kernels r=4
+CPU:     2.21339+-0.00204585 s
+OpenCL devices:
+  Device #0: CPU. Intel(R) Core(TM) i3-8145U CPU @ 2.10GHz. Intel(R) Corporation. Total memory: 3742 Mb
+Using device #0: CPU. Intel(R) Core(TM) i3-8145U CPU @ 2.10GHz. Intel(R) Corporation. Total memory: 3742 Mb
+Building kernels for Intel(R) Core(TM) i3-8145U CPU @ 2.10GHz... 
+Kernels compilation done in 0.319064 seconds
+Device 1
+	Program build log:
+Compilation started
+Compilation done
+Linking started
+Linking done
+Device build started
+Device build done
+Kernel <prod> was successfully vectorized (8)
+Done.
+
+Building kernels for Intel(R) Core(TM) i3-8145U CPU @ 2.10GHz... 
+Kernels compilation done in 0.146295 seconds
+Device 1
+	Program build log:
+Compilation started
+Compilation done
+Linking started
+Linking done
+Device build started
+Device build done
+Kernel <sum> was not vectorized
+Done.
+
+Global Work Size1  1048576
+Global Work Size2  4096 x 4096
+GPU <OCL kern>: 0.700528+-0.00532444 s

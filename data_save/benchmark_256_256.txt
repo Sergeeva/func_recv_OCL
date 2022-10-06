@@ -1,0 +1,23 @@
+Coarse net size  256x256
+Fine net size  1024x1024
+init kernels r=4
+CPU:     0.112667+-0.000471405 s
+OpenCL devices:
+  Device #0: GPU. Radeon RX 590 Series (Ellesmere). Free memory: 8128/8192 Mb
+Using device #0: GPU. Radeon RX 590 Series (Ellesmere). Free memory: 8128/8192 Mb
+Building kernels for Radeon RX 590 Series (Ellesmere)...
+Kernels compilation done in 0.026 seconds
+Device 1
+        Program build log:
+
+
+Building kernels for Radeon RX 590 Series (Ellesmere)...
+Kernels compilation done in 0.047 seconds
+Device 1
+        Program build log:
+
+
+Global Work Size1  65536
+Global Work Size2  1024 x 1024
+GPU <OCL kern>: 0.00883333+-0.000372678 s
+
