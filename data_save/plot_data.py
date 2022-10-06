@@ -37,7 +37,7 @@ if (__name__=='__main__'):
 
     #print(frecv_2d_res)
     
-    MX, MY = np.meshgrid(range(128), range(128))
+    MX, MY = np.meshgrid(range(4096), range(4096))
     fig1 = plt.figure(1)
 #    ax1 = fig1.gca(projection='3d')
     ax1 = fig1.add_subplot(111, projection='3d')
@@ -50,7 +50,7 @@ if (__name__=='__main__'):
 
     #print(frecv_2d_in)
     
-    KX, KY = np.meshgrid(range(32), range(32))
+    KX, KY = np.meshgrid(range(1024), range(1024))
     fig2 = plt.figure(2)
     #ax2 = fig2.gca(projection='3d')
     ax2 = fig2.add_subplot(111, projection='3d')

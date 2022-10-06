@@ -271,7 +271,7 @@ std::cout << "CPU:     " << t.lapAvg() << "+-" << t.lapStd() << " s" << std::end
 
 
 //
-#define OCL 1;
+#define OCL 1
 #if OCL
 {
     // chooseGPUDevice:
