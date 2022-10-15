@@ -1,0 +1,602 @@
+% -*- mode: LaTeX; mode: TeX-PDF; coding: cp1251 -*-
+\documentclass[10pt,draft]{article}
+
+\usepackage[cp1251]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage{indentfirst}
+
+\usepackage[centertags]{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+
+\usepackage{newlfont}
+\usepackage{mathtext}        % еcли нyжны pyccкие бyквы в фоpмyлах
+
+\usepackage{verbatim}
+
+
+% TODO :: it is temporary settings!
+\textwidth=15cm
+\hoffset=-15mm
+\textheight=230mm
+\voffset=-15mm
+\hfuzz=0cm
+\righthyphenmin=2
+\sloppy
+
+
+% THEOREMS ---------------------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{lemma}{Лемма}
+\newtheorem{theorem}{Теорема}
+\newtheorem{algorithm}{Алгорифм}
+\newtheorem{corollary}{Следствие}
+\newtheorem{exercise}{Упражнение}
+
+\newtheorem{theoremcite}{Теорема}
+\renewcommand{\thetheoremcite}{\Alph{theoremcite}}
+
+\newtheorem{lemmacite}{Лемма}
+\renewcommand{\thelemmacite}{\Alph{lemmacite}}
+
+\newtheorem{statementcite}{Утверждение}
+\renewcommand{\thestatementcite}{\Alph{statementcite}}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Определение}
+%
+\theoremstyle{remark}
+\newtheorem{remark}{Замечание}
+
+\makeatletter
+\renewcommand{\@biblabel}[1]{#1.\hfill}
+\makeatother
+
+\newcounter{paragraph_counter}
+\newcommand{\Par}[1]{\par \refstepcounter{paragraph_counter} 
+ \begin{center}{\Large \bf #1} \end{center} \par}
+
+\newcounter{section_counter}
+\newcounter{subsection_counter}
+\newcommand{\Sec}[1]{\par \setcounter{subsection_counter}{0} \refstepcounter{section_counter}
+ \begin{center}{ \bf \arabic{section_counter}. #1}\end{center}{ }}
+
+\newcounter{lemma_counter}
+\newcommand{\Lem}[1]{\par \refstepcounter{lemma_counter}
+ {{\bfЛемма \arabic{lemma_counter}.} {\it#1}}{ }}
+
+\newcounter{theorem_counter}
+\newcommand{\Theorem}[1]{\par \refstepcounter{theorem_counter}
+ {{\bfТеорема \arabic{theorem_counter}.} {\it#1}}{ }}
+
+\newcounter{Theoremcite}
+\newcommand{\Theoremcite}[2]{\par \refstepcounter{Theoremcite} 
+ {{\bfТеорема \theTheoremcite{}} {\rm#1}. {\it#2}}{ }}
+\renewcommand{\theTheoremcite}{\Alph{Theoremcite}}
+
+\newcounter{Lemcite}
+\newcommand{\Lemcite}[2]{\par \refstepcounter{Lemcite} 
+ {{\bfЛемма \theLemcite{}} {\rm#1}. {\it#2}}{ }}
+\renewcommand{\theLemcite}{\Alph{Lemcite}}
+
+\newcounter{conseq_counter}
+\newcommand{\Conseq}[1]{\par \refstepcounter{conseq_counter} 
+ {{\bfСледствие \arabic{conseq_counter}.} {\it#1}}{ }}
+
+\newcommand{\Subsec}{\refstepcounter{subsection_counter}
+ {\bf \arabic{section_counter}.\arabic{subsection_counter}.}{ } }
+
+\newcommand{\Proof}{\par \qquad {\sc  Доказательство. } }
+
+\newcounter{note_counter}
+\newcommand{\Note}{\par \refstepcounter{note_counter}
+ {{\sc Замечание \arabic{note_counter}.}}{ }}
+
+
+
+\begin{document}
+
+
+\noindent
+\parbox{65mm}{\center{\large Г.~Ю.~Пуеров}
+\\[4pt] ОАО <<Концерн <<Океанприбор>>  \\ Санкт-Петербург, Россия \\ puerov@gp11429.spb.edu}
+\hfill\parbox{65mm}
+{\center{\large Е.~И.~Сергеева} \\[4pt] ОАО <<Концерн <<Океанприбор>>  \\ Санкт-Петербург, Россия \\ srgv.lena@gmail.com}
+\vskip15mm
+
+
+
+\Par{Оценка отклонений обобщенных средних В.~А.~Стеклова функций двух переменных}
+
+\bigskip
+
+Пусть $h=(h_1,h_2),\ h_1,h_2>0,\ r\in\mathbb{N}^2,\ S_{h,r}(f)$ --- среднее В.~А.~Стеклова функции $f$ двух переменных,
+$m \in \mathbb{N},\ E$ --- тождественный оператор.
+В работе получена оценка 
+отклонений
+обобщенных средних В.~А.~Стеклова 
+$$
+S_{h,r,m}(f)=(E-(E-S_{h,r})^m)(f), 
+$$
+для $2m$ раз непрерывно дифференцирумых функций двух переменных.
+Библиография: 6 назв.
+
+\Sec{Введение}
+\Subsec
+В дальнейшем $\mathbb{R},\ 
+\mathbb{R}_+,
+\ \mathbb{Z}_+,
+\ \mathbb{N}$ ---
+соответственно множества вещественных, 
+вещественных неотрицательных, 
+целых неотрицательных, натуральных
+чисел.
+Если $A$ --- некоторое множество, то $A^n=A\times\ldots \times A$ ($n$ раз);
+$\mathbf{0}^n=(0,\ldots,0)$ --- нулевой элемент $\mathbb{R}^n,$
+$\mathbf{1}^n=(1,\ldots,1)$ ($n$ единиц). 
+Пусть рассматривается некоторая величина $x\in\mathbb{R}^n,$ тогда
+$x_k$ ($k=1,\ldots,n$) обозначает ее $k$-ю координату. 
+Если $x,\ y \in \mathbb{R}^n,$ то
+скалярное произведение элементов $x,\ y$ и норма $x$ определяются равенствами 
+$$
+(x,y)=\sum_{k=1}^n x_ky_k,\qquad |x|=\sqrt{(x,x)}.
+$$
+Пусть $a,\ b \in \mathbb{R}^n,$ тогда запись $a\leqslant b$ ($a<b$) означает, что 
+$a_k\leqslant b_k$ ($a_k<b_k$) при каждом $k=1,\ldots,n,\ ab=(a_1b_1,\ldots,a_n b_n).$
+Если $a,\ b \in \mathbb{R}^n,\ a\leqslant b,$ то $[a,b]$ --- множество точек
+$x\in \mathbb{R}^n,$ удовлетворяющих неравенствам $a\leqslant x \leqslant b.$
+
+Пусть $G \subset \mathbb{R}^n,$ через $C(G)$    
+обозначаем множество непрерывных функций
+$f:G\to\mathbb{R},$ 
+\begin{equation*}
+  \|f\|_{G,\infty}=\sup_{x\in G}|f(x)|;
+\end{equation*}
+если $f$ измерима на $G,\ 1\leqslant p < \infty,$ то полагаем 
+\begin{equation*}
+  \|f\|_{G,p}=\left(\int_{G}|f|^p\right)^{1/p}.
+\end{equation*}
+В дальнейшем $C^{(r)}(G)$ --- множество функций имеющих все частные производные порядка не выше $r,$ непрерывные на $G,$ где
+$r\in \mathbb{Z}_+,\   G$ открыто ($G\subset\mathbb{R}^2$).
+Пусть
+$f \in C^{(r)}(G),\ 
+x\in G,$ $1\leqslant p \leqslant \infty,$
+обозначим
+\begin{equation*}
+  \mathcal{D}_{r}f(x) =  \sqrt{\sum_{k=0}^{r}C_{r}^{k} \left(\frac{\partial^{r} f(x)}{\partial x_1^{k} \partial x_2^{r-k}}\right)^2}.
+\end{equation*}
+Если $a,b\in\mathbb{R}^2,\ a<b,\ z\in\mathbb{R}_{+}^{2}$ такое, что $[a-z,b+z]\subset G,\ f \in C^{(2m)}(G)$ ($m\in\mathbb{N}$), то 
+\begin{equation*}
+ \Lambda_{z,m}^*(f,[a,b])_p=\sup_{u\in[-z,z]}\|\mathcal{D}_{2m}f\|_{[a+u, b+u],p}.
+\end{equation*}
+
+
+Если $f\in C(\mathbb{R}),\ h>0,\ r-1 \in \mathbb{N},\ x \in \mathbb{R},$ то 
+\begin{align*}
+  &S_{h,1}(f,x)=\frac{1}{h}\int_{-h/2}^{h/2} f(x+t)\,dt,\\
+  &S_{h,r}(f,x)=S_{h,1}(S_{h,r-1}(f),x).
+\end{align*}
+Функция $S_{h,r}(f)$ называется средним В.~А.~Стеклова  порядка $r$ с шагом $h$ функции~$f.$  
+
+Положим при $r\in\mathbb{N}$
+\begin{align*}
+  \psi_r(t)&=
+  \begin{cases}
+    \frac{1}{(r-1)!}\sum\limits_{0\leqslant k<\left(|t|+\frac{r}{2}\right)}(-1)^kC_r^k\left(|t|+\frac{r}{2}-k\right)^{r-1},
+    &\ \text{если}\ |t|\leqslant r/2,\\
+    0,&\ \text{если}\ |t| > r/2,
+  \end{cases}\\
+    \psi_{h,r}(t)&=\frac{1}{h}\psi_r\left(\frac{t}{h}\right).
+\end{align*}
+
+Если $t\in\mathbb{R}^2,\  h>\mathbf{0}^2,\ r\in\mathbb{N}^2,$ то
+\begin{equation*}
+  \psi_{h,r}(t)=\psi_{h_1,r_1}(t_1)\psi_{h_2,r_2}(t_2).
+\end{equation*}
+Для функций двух
+переменных среднее В.~А.~Стеклова определяется следующим образом 
+\begin{equation*}
+  S_{h,r}(f)=S_{h_1,r_1}S_{h_2,r_2}(f). 
+\end{equation*}
+При этом равенство понимается 
+так:
+сначала оператор $S_{h_1,r_1}$ применяется к $f$ как функции одного первого
+аргумента, а затем оператор $S_{h_2,r_2}$ применяется к $S_{h_1,r_1}(f)$ как функции одного второго
+аргумента.
+
+Через $E$  обозначаем тождественный оператор.
+
+\Subsec
+В монографии Н.~И.~Ахиезера~\cite[с.~319]{Akhiezer} на основе интеграла Джексона---Валле-Пуссена 
+\begin{equation*}
+I_n=\frac{3}{2\pi}\int_{\mathbb{R}}f\left(x+\frac{2t}{n}\right)\frac{\sin^4{t}}{t^4}\,dt  
+\end{equation*}
+построен оператор $I_{n,r} = E - (E-I_n)^r$ ($n,r\in\mathbb{N}$). 
+Данный  подход получил  развитие в работах  И.~Ю.~Харрик~\cite{Harrik} и
+И.~П.~Натансона~\cite{Natanson} и 
+в дальнейшем  изучался в работах многих математиков.
+
+В работе В.~В.~Жука~\cite[c.~31]{Zhuk} установлена оценка (мы приводим ее в  случае функций двух переменных): если 
+множество $G$ открыто и выпукло ($G \subset \mathbb{R}^2$),
+$f\in C^{(2)}(G),$ 
+$a,b \in \mathbb{R}^2,$ $h > \mathbf{0}^2,\ r\in\mathbb{N}^2,$
+$[a-\frac{hr}{2},b+\frac{hr}{2}]\subset G,$ 
+$1\leqslant p \leqslant \infty,$
+то 
+\begin{equation*}
+\|f-S_{h,r}(f)\|_{[a,b],p}\leqslant \frac{(r,h^2)}{24}\Lambda^*_{\frac{rh}{2},1}(f,[a,b])_p.
+\end{equation*}
+
+В данной работе получена оценка 
+отклонений
+$\|f- S_{h,r,m}(f)\|_{[a,b],p}$
+обобщенных средних В.~А.~Стеклова 
+ \begin{equation*}
+      S_{h,r,m}(f)=(E-(E-S_{h,r})^m)(f),\quad m \in \mathbb{N}.
+ \end{equation*}
+
+\Sec{Вспомогательные результаты}
+\Subsec Нам понадобятся следующие известные результаты.
+\bigskip
+\Lemcite{(см., например, {\cite[с.~29]{Zhuk}})}{
+  \label{lem:a}
+  Пусть $h>\mathbf{0}^2,\ r\in \mathbb{N}^2,\ x\in\mathbb{R}^2,\ f \in C(\mathbb{R}^2).$ Тогда 
+  \begin{equation*}
+    S_{h,r}(f,x)=\int_{\mathbb{R}^2}f(x+t)\psi_{h,r}(t)\,dt.
+  \end{equation*}
+}
+\bigskip
+\Theoremcite{(формула Тейлора, см., например, {\cite[с.~460]{Zorich}})}{
+  \label{th:Taylor}
+  Если $r,n\in\mathbb{N},\ f\in C^{(r)}(G),$ где $G$ открыто и выпукло ($G \subset \mathbb{R}^n$), $x, x+h\in G,$ то имеет место равенство 
+}
+\begin{multline*}
+  f(x+h)-f(x)=\sum_{k=1}^{r-1}\frac{1}{k!}\left(h_1\frac{\partial}{\partial x_1}+\ldots+h_n\frac{\partial}{\partial x_n}\right)^kf(x)+\\
+  +\frac{1}{(r-1)!}\int_0^1 (1-t)^{r-1} \left(h_1\frac{\partial}{\partial x_1}+\ldots+h_n \frac{\partial}{\partial x_n}\right)^r f(x+th)\,dt.  
+\end{multline*}
+
+
+\Theoremcite{(обобщенное неравенство Минковского, см., например, {\cite[с.~22]{BIN}})}{
+  \label{th:Mink}
+  Пусть $X\subset \mathbb{R}^n,\ Y\subset \mathbb{R}^m,$ функция $f:X\times Y \to \mathbb{R}$ измерима, $p \geqslant 1.$
+  Тогда
+  \begin{equation*}
+    \left\|\int_Y f(\cdot,y)\,dy\right\|_{p,X} \leqslant \int_Y\|f(\cdot,y)\|_{p,X}\,dy.
+  \end{equation*}
+}
+\bigskip
+\Lemcite{(см., например, {\cite[с.~25]{Zhuk}})}{
+  \label{lem:c}
+  Пусть $r\in \mathbb{N},\ h>0.$ Тогда
+  \begin{equation*}
+    \int_\mathbb{R} t^2\psi_{h,r}(t)\,dt \leqslant \frac{rh^2}{12}.
+  \end{equation*}
+}
+
+\Subsec Установим ряд вспомогательных утверждений.
+\bigskip
+\Lem{
+Пусть $G\subset \mathbb{R}^2,\ G$ 
+открыто и выпукло, 
+$m \in \mathbb{N},\ h>\mathbf{0}^2,\ r\in\mathbb{N}^2,\ [x-\frac{rhm}{2}, x+\frac{rhm}{2}]\subset G,$ $f\in C^{(2m)}(G),$ 
+тогда
+  \label{lem:1}
+  \begin{multline}
+    \label{eq:1}
+    (S_{h,r} - E)^m(f,x)
+    =\int_{\mathbb{R}^{2m}}\int_{[{\boldsymbol{0}^m},{\boldsymbol{1}^m}]}
+    \prod_{i=1}^m\left(1-u^{(i)}\right)
+    \psi_{h,r}\left(t^{(i)}\right)\times\\
+    \times\left(t_1^{(i)}\frac{\partial}{\partial
+        x_1}+t_2^{(i)}\frac{\partial}{\partial x_2}\right)^2f
+    \left(x+ 
+      \sum_{k=1}^m
+    u^{(k)} t^{(k)}\right)\, du^{(1)}\ldots du^{(m)} dt^{(1)}\ldots dt^{(m)}.  
+  \end{multline}
+В приведенной формуле интегрирование по каждой из переменных $u^{(1)},\ldots,u^{(m)}$
+производится по отрезку $[0,\ 1],$ а по каждой из переменных
+$t^{(1)},\ldots,t^{(m)}$ по $\mathbb{R}^2.$
+}
+\begin{proof}[\Proof]
+Установим соотношение \eqref{eq:1} по индукции. 
+Так как функция $\psi_{h,r}$ четная по каждому аргументу, то 
+\begin{equation}
+  \label{eq:1.2}
+  \int_{\mathbb{R}^2}\left(t_1\frac{\partial}{\partial x_1}+t_2\frac{\partial}{\partial x_2}\right)f(x)\,\psi_{h,r}(t)\,dt = 0.
+\end{equation}
+При $m=1$ (база индукции), применяя  лемму~\ref{lem:a}, соотношение
+\begin{equation*}
+  \int_{\mathbb{R}^2}\psi_{h,r}(t)\,dt=1,
+\end{equation*}
+формулу Тейлора (теорема~\ref{th:Taylor}) и учитывая равенство \eqref{eq:1.2},
+получаем
+\begin{align*}
+& (S_{h,r} - E)(f,x)
+ = \int_{\mathbb{R}^2}f(x+t)\psi_{h,r}(t)\,dt - f(x) 
+ = \int_{\mathbb{R}^2}(f(x+t) - f(x))\,\psi_{h,r}(t)\,dt = \\
+& = \int_{\mathbb{R}^2}\int_0^1(1-u)\left(t_1\frac{\partial}{\partial x_1}+t_2\frac{\partial}{\partial x_2}\right)^2f(x+tu)\,\psi_{h,r}(t)\,du\,dt.
+\end{align*}
+Предположив, что для произвольного $m$ равенство~\eqref{eq:1} верно, покажем,
+что оно верно и для $m+1$.
+Действительно,
+\begin{align*}
+&(S_{h,r} - E)^{m+1}(f,x) = 
+    (S_{h,r} - E)((S_{h,r} - E)^m(f),x) = \\
+& =\int_{\mathbb{R}^2}\int_0^1(1-u)\left(t_1\frac{\partial}{\partial x_1}+t_2\frac{\partial}{\partial x_2}\right)^2
+    (S_{h,r} - E)^m(f,x+tu)
+\psi_{h,r}(t)\,dudt = \\
+& =\int_{\mathbb{R}^2}\int_0^1(1-u)\left(t_1\frac{\partial}{\partial x_1}+t_2\frac{\partial}{\partial x_2}\right)^2
+   \int_{\mathbb{R}^{2m}}\int_{[{\boldsymbol{0}^m},{\boldsymbol{1}^m}]}
+    \prod_{i=1}^m\left(1-u^{(i)}\right)
+    \psi_{h,r}\left(t^{(i)}\right)\times\\
+    &\times\left(t_1^{(i)}\frac{\partial}{\partial
+        x_1}+t_2^{(i)}\frac{\partial}{\partial x_2}\right)^2f
+    \left(x+tu+ 
+      \sum_{k=1}^m
+    u^{(k)} t^{(k)}\right)\, du^{(1)}\ldots du^{(m)} dt^{(1)}\ldots dt^{(m)}
+\psi_{h,r}(t)\,dudt = \\
+&  = \int_{\mathbb{R}^{2m+2}}\int_{[{0^{m+1}},{1^{m+1}}]}
+  \prod_{i=1}^{m+1}\left(1-u^{(i)}\right)\psi_{h,r}\left(t^{(i)}\right)\times\\
+&\times\left(t_1^{(i)}\frac{\partial}{\partial x_1}+t_2^{(i)}\frac{\partial}{\partial x_2}\right)^2f\left(x
++\sum_{k=1}^{m+1}
+  u^{(k)} t^{(k)}\right)\, du^{(1)}\ldots du^{(m+1)} dt^{(1)}\ldots dt^{(m+1)}.  
+\end{align*}
+\end{proof}
+\bigskip
+\Lem{
+\label {lem:2}
+Пусть $G\subset\mathbb{R}^2,\ G$ открыто,
+$x\in G,\ m \in \mathbb{N},\ t\in \mathbb{R}^2, \ f\in C^{(2m+2)}(G),$ 
+тогда
+\begin{equation}
+\label{eq:2}
+\mathcal{D}_{2m}\left(t_1 \frac{\partial}{\partial x_1} + t_2 \frac{\partial}{\partial x_2}\right)^2 f(x)\leqslant |t|^2\mathcal{D}_{2m+2}f(x).
+\end{equation}
+}
+\begin{proof}[\Proof]
+Применяя неравенство Коши---Буняковского, имеем
+\begin{align}
+\label{eq:3}
+&\left(\mathcal{D}_{2m} \left(t_1 \frac{\partial}{\partial x_1} + t_2
+    \frac{\partial}{\partial x_2}\right)^2 f(x)\right)^2= \notag\\
+ &=\sum_{k=0}^{2m}C_{2m}^k\left(\frac{\partial^{2m}}{\partial x_1^k \partial x_2^{2m-k}} \left(t_1\frac{\partial}{\partial x_1} + t_2 \frac{\partial}{\partial x_2}\right)^2 f(x)\right)^2 = \notag\\
+&=\sum_{k=0}^{2m}C_{2m}^k\left(t_1^2 \frac{\partial^{2m+2}f(x)}{\partial x_1^{k+2}\partial x_2^{2m-k}} +2t_1t_2 \frac{\partial^{2m+2}f(x)}{\partial x_1^{k+1}\partial x_2^{2m-k+1}} 
++ t_2^2 \frac{\partial^{2m+2}f(x)}{\partial x_1^{k} \partial x_2^{2m-k+2}}\right)^2 \leqslant \notag \\
+&\leqslant\sum_{k=0}^{2m}C_{2m}^k\left(t_1^4+2t_1^2t_2^2+t_2^4\right)
+\times\notag\\ 
+&\qquad\qquad\times
+\left(\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k+2}\partial x_2^{2m-k}}\right)^2 
++2\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k+1}\partial x_2^{2m-k+1}}\right)^2 + \left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k} \partial x_2^{2m-k+2}}\right)^2\right)  
+ = \notag \\
+&=|t|^4\sum_{k=0}^{2m}C_{2m}^k\left(\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k+2}\partial x_2^{2m-k}}\right)^2 
++2\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k+1}\partial x_2^{2m-k+1}}\right)^2 +\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k} \partial x_2^{2m-k+2}}\right)^2\right).
+\end{align}
+Сделав замену индекса в суммах и воспользовавшись элементарными свойствами биномиальных коэффициентов, получим
+\begin{align}
+\label{eq:22}
+&\sum_{k=0}^{2m}C_{2m}^k\left(\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k+2}\partial x_2^{2m-k}}\right)^2 
++2\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k+1}\partial x_2^{2m-k+1}}\right)^2 +\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k} \partial x_2^{2m-k+2}}\right)^2\right)=\notag\\
+&=\sum_{k=0}^{2m}C_{2m}^k\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k+2}\partial x_2^{2m-k}}\right)^2+ 
+2\sum_{k=0}^{2m}C_{2m}^k\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k+1}\partial x_2^{2m-k+1}}\right)^2 
++\sum_{k=0}^{2m}C_{2m}^k 
+\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k} \partial x_2^{2m-k+2}}\right)^2=\notag\\
+&=\sum_{k=2}^{2m+2}C_{2m}^{k-2}\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k}\partial x_2^{2m-k+2}}\right)^2+ 
+2\sum_{k=1}^{2m+1}C_{2m}^{k-1}\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k}\partial x_2^{2m-k+2}}\right)^2+\notag\\ 
+&+\sum_{k=0}^{2m}C_{2m}^k 
+\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{k} \partial x_2^{2m-k+2}}\right)^2
+=C_{2m}^0\left(\frac{\partial^{2m+2} f(x)}{\partial x_2^{2m+2}}\right)^2+\left(2C_{2m}^0+C_{2m}^1\right)\left(\frac{\partial^{2m+2} f(x)}{\partial x_1 \partial x_2^{2m+1}}\right)^2+\notag\\
+&+\sum_{k=2}^{2m}\left(C_{2m}^{k-2}+2C_{2m}^{k-1}+C_{2m}^{k}\right)\left(\frac{\partial^{2m+2} f(x)}{\partial x_1^{k} \partial x_2^{2m+2-k}}\right)^2 
++\left(C_{2m}^{2m-1}+2C_{2m}^{2m}\right)\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^{2m+1} \partial x_2}\right)^2+\notag\\
+&+C_{2m}^{2m}\left(\frac{\partial^{2m+2} f(x)}{\partial x_1^{2m+2}}\right)^2 
+=\sum_{k=0}^{2m+2}C_{2m+2}^k\left(\frac{\partial^{2m+2}f(x)}{\partial x_1^k\partial x_2^{2m+2-k}}\right)^2 = (\mathcal{D}_{2m+2}f(x))^2.
+\end{align}
+Подставляя  выражение~\eqref{eq:22} в неравенство~\eqref{eq:3} и извлекая корни, приходим к оценке~\eqref{eq:2}.
+
+
+\end{proof}
+\bigskip
+\Lem{
+  \label{lem:3}
+Пусть $G\subset\mathbb{R}^2,\ G$ открыто,
+$x\in G,\ m \in \mathbb{N},\ t^{(i)}\in\mathbb{R}^2\  (i=1,\dots,m),\ f\in C^{(2m)}(G),$ 
+тогда
+  \begin{equation}
+    \label{eq:4}
+    \prod_{i=1}^m \left(t_1^{(i)}\frac{\partial}{\partial x_1}+t_2^{(i)}\frac{\partial}{\partial x_2}\right)^2 f(x)
+ \leqslant   \prod_{i=1}^m\left|t^{(i)}\right|^2\mathcal{D}_{2m}f(x).
+  \end{equation}
+}
+\begin{proof}[\Proof]
+При $m=1$ (база индукции), 
+применяя неравенство Коши---Буняковского, получим
+\begin{align*}
+&\left(t_1^{(1)}\frac{\partial}{\partial x_1}+t_2^{(1)}\frac{\partial}{\partial x_2}\right)^2f(x)
+=\left(t_1^{(1)}\right)^2\frac{\partial^{2}f(x)}{\partial x_1^2}
++2t_1^{(1)}t_2^{(1)}\frac{\partial^{2}f(x)}{\partial x_1\partial x_2}
++\left(t_2^{(1)}\right)^2\frac{\partial^{2}f(x)}{\partial x_2^2}\leqslant\\
+&\leqslant 
+\left(\left(t_1^{(1)}\right)^4+2\left(t_1^{(1)}\right)^2\left(t_2^{(1)}\right)^2+\left(t_2^{(1)}\right)^4\right)^{\frac{1}{2}} 
+\left( \left(\frac{\partial^{2}f(x)}{\partial x_1^2}\right)^2
++2\left(\frac{\partial^{2}f(x)}{\partial x_1\partial x_2}\right)^2
++\left(\frac{\partial^{2}f(x)}{\partial x_2^2}\right)^2 \right)^{\frac{1}{2}}=\\
+&=\left|t^{(1)}\right|^2\mathcal{D}_2 f(x).
+\end{align*}
+
+Предположим, что для произвольного $m$ неравенство~\eqref{eq:4} верно,
+докажем, что  оно выполнено и для $m+1$.
+Обозначим
+$$
+g(x) = \left(t_1^{(m+1)}\frac{\partial}{\partial x_1}+t_2^{(m+1)}\frac{\partial}{\partial x_2}\right)^2f(x).
+$$
+Тогда по индукционному предположению
+\begin{equation}
+\label{eq:5}
+\prod_{i=1}^{m+1}\left(t_1^{(i)}\frac{\partial}{\partial x_1}+t_2^{(i)}\frac{\partial}{\partial x_2}\right)^2f(x)= 
+\prod_{i=1}^m\left(t_1^{(i)}\frac{\partial}{\partial x_1}+t_2^{(i)}\frac{\partial}{\partial x_2}\right)^2g(x)\leqslant
+\prod_{i=1}^m\left|t^{(i)}\right|^2\mathcal{D}_{2m} g(x).\\
+\end{equation}
+
+Согласно лемме~\ref{lem:2}
+\begin{equation}
+\label{eq:6}
+\mathcal{D}_{2m} g(x) = \mathcal{D}_{2m} \left(t_1^{(m+1)}\frac{\partial}{\partial x_1}+t_2^{(m+1)}\frac{\partial}{\partial x_2}\right)^2f(x) \leqslant
+\left|t^{(m+1)}\right|^2\mathcal{D}_{2m+2}f(x).
+\end{equation}
+
+Сопоставив выражения \eqref{eq:5} и \eqref{eq:6}, получим неравенство
+\eqref{eq:4} для $m+1.$
+
+\end{proof}
+
+
+
+\Sec{Основные результаты}
+\bigskip
+\Theorem{
+\label{th:1}
+Пусть $G\subset\mathbb{R}^2,\ G$ 
+открыто и выпукло, 
+$m \in \mathbb{N},$
+$f\in C^{(2m)}(G),$ 
+$a,b \in \mathbb{R}^2,$ $h > \mathbf{0}^2,\ r\in\mathbb{N}^2,$
+$[a-\frac{mhr}{2},b+\frac{mhr}{2}]\subset G,$ 
+$1\leqslant p \leqslant \infty,$
+тогда
+  \begin{equation*}
+    \|f-S_{h,r,m}(f)\|_{[a,b],p}\leqslant \left(\frac{(r,h^2)}{24}\right)^m\Lambda_{\frac{mhr}{2},m}^*(f,[a,b])_p.    
+  \end{equation*}
+}
+\begin{proof}[\Proof]
+Сопоставив леммы \ref{lem:1} и \ref{lem:3}, имеем
+\begin{multline}
+\label{eq:8}
+|f(x)-S_{h,r,m}(f,x)|
+\leqslant 
+\int_{\mathbb{R}^{2m}}\int_{[0^m,1^m]}
+\prod_{i=1}^m\left(1-u^{(i)}\right)
+\times \\ \times
+\left|t^{(i)}\right|^2\psi_{h,r}\left(t^{(i)}\right)\mathcal{D}_{2m}f\left(x+\sum_{k=1}^m u^{(k)} t^{(k)}\right)
+\, du^{(1)}\ldots du^{(m)} dt^{(1)}\ldots dt^{(m)}.
+\end{multline}
+
+Пусть сначала  $p<\infty.$
+Используя обобщенное неравенство Минковского (теорема~\ref{th:Mink}), получаем
+\begin{multline*}
+\|f-S_{h,r,m}(f)\|_{[a,b],p}
+\leqslant 
+\left\|\int_{\mathbb{R}^{2m}}\int_{[0^m,1^m]}
+\prod_{i=1}^m\left(1-u^{(i)}\right)\right.
+\times \\ \times
+\left.
+\left|t^{(i)}\right|^2\psi_{h,r}\left(t^{(i)}\right)\mathcal{D}_{2m}f\left(\cdot+\sum_{k=1}^m u^{(k)} t^{(k)}\right)
+\, du^{(1)}\ldots du^{(m)} dt^{(1)}\ldots dt^{(m)} 
+\right\|_{[a,b],p} 
+\leqslant\\
+\leqslant \int_{\mathbb{R}^{2m}}\int_{[0^m,1^m]}
+\prod_{i=1}^m\left(1-u^{(i)}\right)
+\left|t^{(i)}\right|^2\psi_{h,r}\left(t^{(i)}\right)
+\times \\ \times
+\left\|\mathcal{D}_{2m}f\left(\cdot+\sum_{k=1}^m u^{(k)} t^{(k)}\right)\right\|_{[a,b],p} du^{(1)}\ldots du^{(m)} dt^{(1)}\ldots dt^{(m)}.
+\end{multline*}
+Но при $t^{(k)}\in[-\frac{hr}{2}, \frac{hr}{2}],\ u^{(k)} \in [0,1],\  k = 1,\dots, m$
+\begin{multline*}
+\left\|\mathcal{D}_{2m}f\left(\cdot+\sum_{k=1}^m u^{(k)} t^{(k)}\right)\right\|_{[a,b],p} 
+=\left(\int_{[a,b]}\left(\mathcal{D}_{2m}f\left(x+\sum_{k=1}^m u^{(k)} t^{(k)}\right)\right)^p\,dx\right)^{\frac{1}{p}}  =\\
+=\left(\int_{\left[a+\sum\limits_{k=1}^m u^{(k)}t^{(k)},b+\sum\limits_{k=1}^m u^{(k)}t^{(k)}\right]}\left(\mathcal{D}_{2m}f(x)\right)^p\,dx\right)^{\frac{1}{p}} 
+=\|\mathcal{D}_{2m}f\|_{\left[a+\sum\limits_{k=1}^m u^{(k)}t^{(k)},b+\sum\limits_{k=1}^m u^{(k)}t^{(k)}\right],p} \leqslant\\
+\leqslant \Lambda_{\frac{mhr}{2},m}^*(f,[a,b])_p.
+\end{multline*}
+Отсюда, применяя лемму~\ref{lem:c}, находим, что
+\begin{multline*}
+\|f-S_{h,r,m}(f)\|_{[a,b],p}
+\leqslant
+\Lambda_{\frac{mhr}{2},m}^*(f,[a,b])_p \int_{\mathbb{R}^{2m}}\prod_{i=1}^m\left|t^{(i)}\right|^2\psi_{h,r}\left(t^{(i)}\right)\,dt^{(1)}\ldots dt^{(m)}
+\times \\ \times
+\int_{[0^m,1^m]}\prod_{i=1}^m\left(1-u^{(i)}\right)\,du^{(1)}\ldots du^{(m)} 
+\leqslant\Lambda_{\frac{mhr}{2},m}^*(f,[a,b])_p \left(\frac{(r,h^2)}{24}\right)^m.
+\end{multline*}
+
+Осталось рассмотреть случай 
+$p=\infty$. Опираясь на обобщенное неравенство Минковского 
+и лемму~\ref{lem:c}, получим 
+\begin{multline*}
+\|f-S_{h,r,m}(f)\|_{[a,b],\infty}
+\leqslant
+\int_{\mathbb{R}^{2m}}\int_{[0^m,1^m]}
+\prod_{i=1}^m\left(1-u^{(i)}\right)\left|t^{(i)}\right|^2\psi_{h,r}\left(t^{(i)}\right)
+\times \\ \times
+\max_{x\in[a,b]}\mathcal{D}_{2m}f\left(x+\sum_{k=1}^m u^{(k)} t^{(k)}\right)
+\, du^{(1)}\ldots du^{(m)} dt^{(1)}\ldots dt^{(m)} 
+\leqslant\\
+\leqslant 
+\Lambda_{\frac{mhr}{2},m}^*(f,[a,b])_\infty \int_{\mathbb{R}^{2m}}\prod_{i=1}^m\left|t^{(i)}\right|^2\psi_{h,r}\left(t^{(i)}\right)\,dt^{(1)}\ldots dt^{(m)}
+\times \\ \times
+\int_{[0^m,1^m]}\prod_{i=1}^m\left(1-u^{(i)}\right)\,du^{(1)}\ldots du^{(m)} 
+\leqslant\Lambda_{\frac{mhr}{2},m}^*(f,[a,b])_\infty \left(\frac{(r,h^2)}{24}\right)^m.
+\end{multline*}
+
+\end{proof}
+\bigskip
+\Conseq{
+Пусть $G\subset\mathbb{R}^2,\ G$ 
+открыто и выпукло, 
+$m \in \mathbb{N},$
+$f\in C^{(2m)}(G),$ 
+$a,b \in \mathbb{R}^2,$ $h > \mathbf{0}^2,\ r\in\mathbb{N}^2,$
+$[a-\frac{mhr}{2},b+\frac{mhr}{2}]\subset G,$ 
+$1\leqslant p \leqslant \infty,$
+тогда
+  \begin{equation*}
+    \|f-S_{h,r,m}(f)\|_{[a,b],p}\leqslant \left(\frac{(r,h^2)}{24}\right)^m\|\mathcal{D}_{2m}f\|_{[a-\frac{hrm}{2},b+\frac{hrm}{2}],p}.
+  \end{equation*}
+}
+\begin{proof}[\Proof]
+Ясно, что 
+\begin{equation*}
+ \Lambda_{\frac{mhr}{2},m}^*(f,[a,b])_p=\sup_{u\in[-\frac{mhr}{2},\frac{mhr}{2}]}\|\mathcal{D}_{2m}f\|_{[a+u, b+u],p}\leqslant\|\mathcal{D}_{2m}f\|_{[a-\frac{hrm}{2},b+\frac{hrm}{2}],p}.
+\end{equation*}
+Остается воспользоваться теоремой~\ref{th:1}.
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\refname}{\begin{center}\textbf{Литература}\end{center}}
+
+\begin{thebibliography}{99}
+
+\bibitem{Akhiezer}
+Н.~И.~Ахиезер, \textit{Лекции по теории аппроксимации,} ОГИЗ Гостехиздат, М.--Л. (1947). %324~с.
+
+\bibitem{Harrik}
+И.~Ю.~Харрик, ``К проблеме аппроксимации функций, связанной с исследованием сходимости вариационных процессов'', 
+\textit{Докл. АН СССР},  \textbf{81}, \No~2, 157--160 (1951).
+
+\bibitem{Natanson}
+И.~П.~Натансон, ``О приближении к многократно дифференцируемым периодическим функциям при помощи сингулярных интегралов'', 
+\textit{Докл. АН СССР},  \textbf{82}, \No~3, 337--339 (1952).
+
+\bibitem {Zhuk}
+В.~В.~Жук, \textit{Методические указания к курсу ``Теория аппроксимации функций и ее
+приложения'', часть 2}, С.-Петербургский ун-т (1993). %41~с.
+
+\bibitem{Zorich} 
+В.~А.~Зорич, \textit{Математический анализ, часть I,} Наука, М. (1981). %544~с. 
+
+\bibitem{BIN} 
+О.~В.~Бесов, В.~П.~Ильин, С.~М.~Никольский, \textit{Интегральные представления
+  функций и теоремы вложения,} Наука, М. (1975). %544~с. 
+
+\end{thebibliography}
+\end{document}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: nil
+%%% End: 
