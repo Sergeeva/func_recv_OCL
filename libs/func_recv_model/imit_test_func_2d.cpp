@@ -44,7 +44,7 @@ void line_func_2d(float* node_values, int n_1, int n_2, t_vector_2d_f h, t_vecto
 }
 
 // a_1*x_1^2 + a_2*x_2^2 + b
-void polinomial_func_2_2d_v1(float* node_values, int n_1, int n_2, t_vector_2d_f h, t_vector_2d_f coeff[2]){
+void polinomial_func_2_2d_v1(float* node_values, int n_1, int n_2, t_vector_2d_f h, t_vector_2d_f coeff[3]){
 
   int k1, k2;
 
@@ -54,14 +54,14 @@ void polinomial_func_2_2d_v1(float* node_values, int n_1, int n_2, t_vector_2d_f
     for(k2 = 0; k2<n_2; k2++){
       x1 = k1*h._1;
       x2 = k2*h._2;
-      *node_values = coeff[1]._1*x1*x1 + coeff[1]._2*x2*x2 + coeff[0]._1 + coeff[0]._2;
+      *node_values = sqrt(coeff[2]._1*x1*x1 + coeff[2]._2*x2*x2 + coeff[1]._1*x1 + coeff[1]._2*x2 + coeff[0]._1 + coeff[0]._2);
 	  node_values++;
   }
 
   return;
 }
 
-void reverse_polinomial_func_2_2d_v1(float* node_values, int n_1, int n_2, t_vector_2d_f h, t_vector_2d_f coeff[2]){
+void reverse_polinomial_func_2_2d_v1(float* node_values, int n_1, int n_2, t_vector_2d_f h, t_vector_2d_f coeff[3]){
 
   int k1, k2;
 
@@ -71,7 +71,7 @@ void reverse_polinomial_func_2_2d_v1(float* node_values, int n_1, int n_2, t_vec
     for(k2 = 0; k2 < n_2; k2++){
       x1 = k1*h._1;
       x2 = k2*h._2;
-      tmp_val = coeff[1]._1*x1*x1 + coeff[1]._2*x2*x2 + coeff[0]._1 + coeff[0]._2;;
+      tmp_val = coeff[2]._1*x1*x1 + coeff[2]._2*x2*x2 + coeff[1]._1*x1 + coeff[1]._2*x2 + coeff[0]._1 + coeff[0]._2;;
       *node_values = 1./tmp_val;
 	  node_values++;
   }

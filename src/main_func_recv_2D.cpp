@@ -129,8 +129,8 @@ int main(int argc, char **argv)
 // Определяем размер задачи 
 
 // Кол-во узлов крупной сетки
-const int K_x = 1024;
-const int K_y = 1024; // а если K_x!=K_y ??
+const int K_x = 16;
+const int K_y = 16; // а если K_x!=K_y ??
 const int K = K_x*K_y;
 
 std::cout << "Coarse net size  " << K_x << "x" << K_y << std::endl;
@@ -162,30 +162,30 @@ t_vector_2d_f h;
 h._1 = 1.0f;
 h._2 = 1.0f;
 
-t_vector_2d_f coeffs[2];
-coeffs[0]._1 = -2.0f;
-coeffs[0]._2 = 2.0f;
+//t_vector_2d_f coeffs[2];
+//coeffs[0]._1 = -2.0f;
+//coeffs[0]._2 = 2.0f;
 
-coeffs[1]._1 = 5.0f;
-coeffs[1]._2 = -3.0f;
+//coeffs[1]._1 = 5.0f;
+//coeffs[1]._2 = -3.0f;
 
 
 //const_2d(in_data.data(), K_y, K_x, h, 5.0);
 
 //line_func_2d(in_data.data(), K_y, K_x, h, coeffs);
 
-reverse_polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs);
 
 t_vector_2d_f coeffs3[3];
-coeffs3[0]._1 = -2.0f;
-coeffs3[0]._2 = 5.0f;
+coeffs3[0]._1 = 10.0f;
+coeffs3[0]._2 = 10.0f;
 
-coeffs3[1]._1 = 10.0f;
-coeffs3[1]._2 = -3.0f;
+coeffs3[1]._1 = 5.0f;
+coeffs3[1]._2 = -2.0f;
 
 coeffs3[2]._1 = 5.0f;
-coeffs3[2]._2 = -1.0f;
+coeffs3[2]._2 = -2.0f;
 
+reverse_polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs3);
 
 //polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs3);
 //////////////////////////////////////////////////////////////////////
@@ -228,7 +228,21 @@ if(r == 2){
     }
 }
 
-
+/*
+//for print and draw
+//r = 4
+std::ofstream kern4_file;
+kern4_file.open("../data_save/kern4.dat");
+ for (int y = Nr, i = 0; y >-Nr; y--, i++){
+        for(int x = -Nr, j = 0; x < Nr; x++, j++){
+            t_vector_2d_f t;
+            t._1 = x/(float)(N+1);
+            t._2 = y/(float)(N+1);
+            kern4_file<<psi_4_2d(t)<<"  ";
+        }
+    kern4_file<<std::endl;
+ }
+*/
 
 
 // значения произведений
@@ -271,7 +285,7 @@ std::cout << "CPU:     " << t.lapAvg() << "+-" << t.lapStd() << " s" << std::end
 
 
 //
-#define OCL 1
+#define OCL 0
 #if OCL
 {
     // chooseGPUDevice:
@@ -380,7 +394,7 @@ if (out_file.is_open()){
     std::cout<<"WRITING file with result"<<std::endl;
         for(int i = 0; i < M_y; i++){
             for(int j = 0; j < M_x; j++){
-                out_file<<out_data[i*M_x + j]<<"  ";
+                out_file<<out_data_etal[i*M_x + j]<<"  ";
             }
             out_file<<std::endl;
         }            
