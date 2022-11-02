@@ -65,16 +65,56 @@ void reverse_polinomial_func_2_2d_v1(float* node_values, int n_1, int n_2, t_vec
 
   int k1, k2;
 
-  float x1, x2, tmp_val;
+  float x1, x2, tmp_val, tmp_val_2;
 
   for(k1 = 0; k1 < n_1; k1++)
     for(k2 = 0; k2 < n_2; k2++){
       x1 = k1*h._1;
       x2 = k2*h._2;
-      tmp_val = coeff[2]._1*x1*x1 + coeff[2]._2*x2*x2 + coeff[1]._1*x1 + coeff[1]._2*x2 + coeff[0]._1 + coeff[0]._2;;
-      *node_values = 1./tmp_val;
+      tmp_val = coeff[2]._1*x1*x1 + coeff[2]._2*x2*x2 + coeff[1]._1*x1 + coeff[1]._2*x2 + coeff[0]._1 + coeff[0]._2;
+      tmp_val_2 = coeff[0]._1*x1*x1 + coeff[0]._2*x2*x2 + coeff[1]._1*x1 + coeff[1]._2*x2 + coeff[2]._1 + coeff[2]._2;;
+      *node_values = tmp_val_2/tmp_val;
 	  node_values++;
   }
 
   return;
 }
+
+
+void test_surface_1(float* node_values, int n_1, int n_2, t_vector_2d_f h, t_vector_2d_f coeff[3]){
+
+  int k1, k2;
+
+  float x1, x2, tmp_val;
+
+  for(k1 = 0; k1 < n_1; k1++)
+    for(k2 = 0; k2 < n_2; k2++){
+      x1 = (k1-n_1/2)*h._1;
+      x2 = (k2-n_2/2)*h._2;
+      tmp_val = sin(sqrt(x1*x1 + x2*x2));
+      *node_values = tmp_val;
+	  node_values++;
+  }
+
+  return;
+}
+
+
+void test_surface_2(float* node_values, int n_1, int n_2, t_vector_2d_f h, t_vector_2d_f coeff[3]){
+
+  int k1, k2;
+
+  float x1, x2, tmp_val;
+
+  for(k1 = 0; k1 < n_1; k1++)
+    for(k2 = 0; k2 < n_2; k2++){
+      x1 = (k1-n_1/2)*h._1;
+      x2 = (k2-n_2/2)*h._2;
+      tmp_val = x1*x1*x1 - 3*x1*x2*x2;
+      *node_values = tmp_val;
+	  node_values++;
+  }
+
+  return;
+}
+

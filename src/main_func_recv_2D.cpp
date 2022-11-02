@@ -185,7 +185,8 @@ coeffs3[1]._2 = -2.0f;
 coeffs3[2]._1 = 5.0f;
 coeffs3[2]._2 = -2.0f;
 
-reverse_polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs3);
+//reverse_polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs3);
+test_surface_2(in_data.data(), K_y, K_x, h, coeffs3);
 
 //polinomial_func_2_2d_v1(in_data.data(), K_y, K_x, h, coeffs3);
 //////////////////////////////////////////////////////////////////////

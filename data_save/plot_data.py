@@ -35,32 +35,32 @@ if (__name__=='__main__'):
     filename = 'func_recv_2d__result.dat'
     frecv_2d_res = np.loadtxt(filename)
 
-    #print(frecv_2d_res)
-    
+    filename = 'func_recv_2d__input.dat'
+    frecv_2d_in = np.loadtxt(filename)
+
+        
     MX, MY = np.meshgrid(range(16*4), range(16*4))
     fig1 = plt.figure(1)
-#    ax1 = fig1.gca(projection='3d')
     ax1 = fig1.add_subplot(1, 1, 1, projection='3d')
 #    surf1 = ax1.plot_surface(MX, MY, frecv_2d_res , cmap = cm.jet, rstride = 1, cstride = 1, linewidth = 0, antialiased = False)   
     ax1.scatter(MX, MY, frecv_2d_res, c='r', marker='*')
 #    surf1 = ax1.plot_wireframe(MX, MY, frecv_2d_res , rstride = 1, cstride = 1) #, rcount = 128, ccount = 128)   
 
-    filename = 'func_recv_2d__input.dat'
-    frecv_2d_in = np.loadtxt(filename)
 
-    #print(frecv_2d_in)
-    
     KX, KY = np.meshgrid(range(0,16*4,4), range(0,16*4,4))
-#    fig2 = plt.figure(2)
+
 #    ax2 = fig2.gca(projection='3d')
 #    ax2 = fig1.add_subplot(1, 2, 2, projection='3d')
     #surf2 = ax2.plot_surface(KX, KY, frecv_2d_in , cmap = cm.jet, rstride = 1, cstride = 1, linewidth = 0, antialiased = False)   
     ax1.scatter(KX, KY, frecv_2d_in, c='b', marker='*')
     #surf2 = ax2.plot_wireframe(KX, KY, frecv_2d_in , rstride = 1, cstride = 1) #, rcount = 32, ccount = 32)
-    
 
-   
 
+    fig2 = plt.figure(2)
+    ax2 = fig2.add_subplot(1, 2, 1, projection='3d')
+    ax2.scatter(MX, MY, frecv_2d_res, c='r', marker='*')
+    ax2 = fig2.add_subplot(1, 2, 2, projection='3d')
+    ax2.scatter(KX, KY, frecv_2d_in, c='b', marker='*')
 
     plt.show()
 else:
