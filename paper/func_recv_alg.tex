@@ -1,0 +1,37 @@
+% -*- mode: LaTeX; mode: TeX-PDF; coding: utf-8  -*-
+
+\label{sec:func_recv}
+
+\subsection*{Алгоритм восстановления данных}
+
+Восстановление значения в произвольном  узле $x$    мелкой сетки %в узле $x$,
+$r$ ($r\in\mathbb{Z}_+^n$) раз непрерывно дифференцируемой функции $\varphi$
+выполняется следующим образом: 
+\begin{gather}
+  \label{eq:recv_common}
+  g_{h,r+\mathbf{2}^n}(\varphi, x) = \sum_{k\in  \Delta_{K,r}}
+   \varphi(u^{(k)})
+   \psi_{h, r+\mathbf{2}^n}(x-u^{(k)}),%\\ \notag \text{где}\ 
+ \end{gather}
+ где $ \Delta_{K,r}=\left[-\lfloor{(r+\mathbf{1}^n)/2}\rfloor:
+   K-\mathbf{1}^n+\lfloor{(r+\mathbf{1}^n)/2}\rfloor\right]$.  %\cap\mathbb{Z}_+^n
+
+ 
+Из формулы~\eqref{eq:recv_common} следует, что для вычислений
+могут быть нужны дополнительные
+узлы по краям исходной сетки.
+Способы выбора значений в этих узлах зависят
+от специфики задачи для которой применяется формула~\eqref{eq:recv_common}  
+и в данной работе не рассматриваются.
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "paper_func_recv"
+%%% End: 
+
+
+
